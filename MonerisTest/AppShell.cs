@@ -5,6 +5,7 @@ namespace MonerisTest
     {
         public AppShell()
         {
+            Routing.RegisterRoute(nameof(PaymentWebPage), typeof(PaymentWebPage));
 
            TabBar LoginTab = new TabBar
             {

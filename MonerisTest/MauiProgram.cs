@@ -1,4 +1,4 @@
-﻿using Android.Service.Dreams;
+﻿
 using Microsoft.Extensions.Logging;
 using MonerisTest.Services.Implementations;
 using MonerisTest.Services.Interfaces;
@@ -21,6 +21,7 @@ namespace MonerisTest
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton <PaymentPage>();
             builder.Services.AddSingleton<PaymentViewModel>();
+            builder.Services.AddTransient<PaymentWebPage>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

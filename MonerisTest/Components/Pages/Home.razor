@@ -1,5 +1,36 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<html>
+<head>
+    <title> Outer Frame - Merchant Page</title>
+    
+</head>
+<body>
+    <div>This is the outer page</div>
+    <div id=monerisResponse></div>
+
+     <iframe id=monerisFrame src="https://esqa.moneris.com/HPPtoken/index.php?id=htYGSBNUSNGJ7D1&css_
+               body=background:green;&css_textbox=border-width:2px;&css_textbox_pan=width:240px;&enable_
+               exp=1&css_textbox_exp=width:80px;&enable_cvd=1&css_textbox_cvd=width:40px;&enable_exp_
+            formatting=1;&enable_cc_formatting =1&display_labels=1"></iframe>
+
+    @*   <iframe id=monerisFrame
+            src="https://esqa.moneris.com/HPPtoken/index.php?id=htYGSBNUSNGJ7D1&css_
+            body=background:green;&css_textbox =border-width:2px;&css_textbox_pan =width:140px;&enable_
+            exp=1&css_textbox_exp =width:40px;&enable_cvd =1&css_textbox_cvd =width:40px&enable_exp_
+            formatting=1&enable_cc_formatting =1 frameborder='1' width="200px" height="200px"></iframe> *@
+
+    <button @onclick="DoMonerisSubmit" >SUBMIT</button>
+</body>
+</html>
+
+@code {
+    private async void DoMonerisSubmit()
+    {
+        
+       // await JSRuntime.InvokeAsync<IJSObjectReference>("monerisSubmit", monerisFrame.);
+    }
+
+    
+       }

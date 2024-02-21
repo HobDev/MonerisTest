@@ -6,9 +6,9 @@
         {
             InitializeComponent();
 
-           // MainPage = new MainPage();
+            MainPage = new MainPage();
 
-            MainPage = new AppShell();
+           // MainPage = new AppShell();
         }
     }
 }

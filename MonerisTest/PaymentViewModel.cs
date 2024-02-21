@@ -53,6 +53,7 @@ namespace MonerisTest
         private async Task Purchase()
         {
             await purchaseService.Purchase();
+           await Shell.Current.GoToAsync(nameof(PaymentWebPage));   
         }
 
         private async Task PurchaseCorrection()
