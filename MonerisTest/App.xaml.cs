@@ -8,7 +8,7 @@
 
           //  MainPage = new MainPage();
 
-           // MainPage = new AppShell();
+            MainPage = new AppShell();
         }
 
         protected override async void OnAppLinkRequestReceived(Uri uri)
@@ -28,7 +28,7 @@
             Console.WriteLine("APP LINK: " + uri.ToString());
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-            => new Window(new MainPage());
+        //protected override Window CreateWindow(IActivationState? activationState)
+        //    => new Window(new MainPage());
     }
 }

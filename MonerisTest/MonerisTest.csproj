@@ -58,6 +58,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="EJL.MauiHybridWebView" Version="1.0.0-preview4" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
@@ -73,18 +74,10 @@
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
 
 		<!-- For debugging, use '?mode=developer' for debug to bypass apple's CDN cache -->
-		<CustomEntitlements
-			Condition="$(Configuration) == 'Debug'"
-			Include="com.apple.developer.associated-domains"
-			Type="StringArray"
-			Value="applinks:townmilk.com?mode=developer" />
+		<CustomEntitlements Condition="$(Configuration) == 'Debug'" Include="com.apple.developer.associated-domains" Type="StringArray" Value="applinks:townmilk.com?mode=developer" />
 
 		<!-- Non debugging, use normal applinks:url value -->
-		<CustomEntitlements
-			Condition="$(Configuration) != 'Debug'"
-			Include="com.apple.developer.associated-domains"
-			Type="StringArray"
-			Value="applinks:townmilk.com" />
+		<CustomEntitlements Condition="$(Configuration) != 'Debug'" Include="com.apple.developer.associated-domains" Type="StringArray" Value="applinks:townmilk.com" />
 
 	</ItemGroup>
 

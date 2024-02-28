@@ -56,6 +56,7 @@ namespace MonerisTest
 #endif
                 });
 
+            builder.Services.AddHybridWebView();
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton <PaymentPage>();
             builder.Services.AddSingleton<PaymentViewModel>();

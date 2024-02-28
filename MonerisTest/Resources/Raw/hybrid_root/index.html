@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title> Outer Frame - Merchant Page</title>
+    <script src="_hwv/HybridWebView.js"></script>
+    <script src="myapp.js"></script>
+</head>
+<body>
+    <div>This is the outer page</div>
+    <div id=monerisResponse></div>
+    <iframe id=monerisFrame src=https://esqa.moneris.com/HPPtoken/index.php?id=htYGSBNUSNGJ7D1&css_body=padding:20;&css_textbox=border-width:2px;&enable_exp=1&css_textbox_exp=width:80px;&enable_cvd=1&css_textbox_cvd=width:60px&display_labels=2&enable_exp_
+formatting=1&enable_cc_formatting=1 frameborder='1' ></iframe>
+
+  
+    <button onClick="doMonerisSubmit()">SUBMIT</button>
+</body>
+</html>
