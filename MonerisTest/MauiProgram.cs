@@ -74,7 +74,8 @@ namespace MonerisTest
         {
             builder.Services.AddSingleton<ICardVerificationService, CardVerificationService>();
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
-            builder.Services.AddSingleton<ISaveTokenService, SaveTokenService>();
+            builder.Services.AddSingleton<IGetTempTokenService, GetTempTokenService>(); 
+            builder.Services.AddSingleton<IConvertTempToPermanentTokenService, ConvertTempToPermanentTokenService>();
             builder.Services.AddSingleton<IPurchaseCorrectionService, PurchaseCorrectionService>();
             builder.Services.AddSingleton<IRefundService, RefundService>();
             builder.Services.AddSingleton<IIndependentRefundService, IndependentRefundService>();

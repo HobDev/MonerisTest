@@ -8,8 +8,8 @@ namespace MonerisTest.Services.Implementations
     public class PurchaseService : IPurchaseService
     {
         //transaction object properties
-        String store_id = "monca07871";
-        String api_token = "qtnLcdpoe25H5qaQFQcj";
+        String store_id = AppConstants.STORE_ID;
+        String api_token = AppConstants.API_TOKEN;  
 
 
         // connection object properties

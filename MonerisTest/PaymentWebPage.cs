@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Messaging;
 using HybridWebView;
 using System.Text.Json.Serialization;
 
@@ -28,8 +29,8 @@ public class PaymentWebPage : ContentPage
         // Handle the message received from JavaScript
         await Dispatcher.DispatchAsync(async () =>
         {
-             string? monerisTokenResponse = e.Message;
-            if (monerisTokenResponse != null)
+             string? monerisToken = e.Message;
+            if (monerisToken != null)
             {
                // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
                
@@ -48,9 +49,20 @@ public class PaymentWebPage : ContentPage
             _mainPage = mainPage;
         }
 
-        public void CallMeFromScript(string? dataKey, string? bin)
+        public async void CallMeFromScript(string? dataKey, string? bin)
         {
+            // Handle the message received from JavaScript
            
+                if (dataKey != null)
+                {
+                    // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
+                    MainThread.BeginInvokeOnMainThread(async() =>
+                    {
+                        WeakReferenceMessenger.Default.Send(new TokenMessage(dataKey));
+                    });
+
+                }
+         
         }
     }
 }

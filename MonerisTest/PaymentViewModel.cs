@@ -21,8 +21,10 @@ namespace MonerisTest
         private readonly IIndependentRefundService independentRefundService;
         private readonly IOpenTotalsService openTotalsService;
         private readonly IBatchCloseService batchCloseService;
+        private readonly IGetTempTokenService getTempTokenService;  
+        private readonly IConvertTempToPermanentTokenService convertTempToPermanentTokenService;    
 
-        public PaymentViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IPurchaseCorrectionService purchaseCorrectionService, IRefundService refundService, IIndependentRefundService independentRefundService, IOpenTotalsService openTotalsService, IBatchCloseService batchCloseService)
+        public PaymentViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IPurchaseCorrectionService purchaseCorrectionService, IRefundService refundService, IIndependentRefundService independentRefundService, IOpenTotalsService openTotalsService, IBatchCloseService batchCloseService, IGetTempTokenService getTempTokenService, IConvertTempToPermanentTokenService convertTempToPermanentTokenService)
         {
 
             this.cardVerificationService = cardVerificationService;
@@ -32,6 +34,8 @@ namespace MonerisTest
             this.independentRefundService = independentRefundService;
             this.openTotalsService = openTotalsService;
             this.batchCloseService = batchCloseService;
+            this.getTempTokenService = getTempTokenService;
+            this.convertTempToPermanentTokenService = convertTempToPermanentTokenService;
 
             CardVerificationCommand = new Command(async () => await CardVerification());
             PurchaseCommand = new Command(async () => await Purchase());
@@ -40,7 +44,7 @@ namespace MonerisTest
             IndependentRefundCommand = new Command(async () => await IndependentRefund());
             OpenTotalsCommand = new Command(async () => await OpenTotals());
             BatchCloseCommand = new Command(async () => await BatchClose());
-            
+           
         }
 
 
@@ -52,8 +56,9 @@ namespace MonerisTest
 
         private async Task Purchase()
         {
-            await purchaseService.Purchase();
-           await Shell.Current.GoToAsync(nameof(PaymentWebPage));   
+          //  await purchaseService.Purchase();
+          string? tempToken = await getTempTokenService.GetTempToken(); 
+            
         }
 
         private async Task PurchaseCorrection()
