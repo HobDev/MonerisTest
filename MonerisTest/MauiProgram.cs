@@ -1,8 +1,10 @@
 ﻿
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
+using MonerisTest.Pages;
 using MonerisTest.Services.Implementations;
 using MonerisTest.Services.Interfaces;
+using MonerisTest.ViewModels;
 
 namespace MonerisTest
 {
@@ -58,9 +60,12 @@ namespace MonerisTest
 
             builder.Services.AddHybridWebView();
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSingleton <PaymentPage>();
-            builder.Services.AddSingleton<PaymentViewModel>();
+            builder.Services.AddSingleton <BookingPage>();
+            builder.Services.AddSingleton<BookingViewModel>();
             builder.Services.AddTransient<PaymentWebPage>();
+            builder.Services.AddTransient<PaymentWebViewModel>();
+            builder.Services.AddTransient<CancellationPage>();
+            builder.Services.AddTransient<CancellationViewModel>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
@@ -72,15 +77,12 @@ namespace MonerisTest
 
         public static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
         {
-            builder.Services.AddSingleton<ICardVerificationService, CardVerificationService>();
+           
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
             builder.Services.AddSingleton<IGetTempTokenService, GetTempTokenService>(); 
-            builder.Services.AddSingleton<IConvertTempToPermanentTokenService, ConvertTempToPermanentTokenService>();
-            builder.Services.AddSingleton<IPurchaseCorrectionService, PurchaseCorrectionService>();
+            builder.Services.AddSingleton<IConvertTempToPermanentTokenService, ConvertTempToPermanentTokenService>();    
             builder.Services.AddSingleton<IRefundService, RefundService>();
-            builder.Services.AddSingleton<IIndependentRefundService, IndependentRefundService>();
-            builder.Services.AddSingleton<IOpenTotalsService, OpenTotalsService>();
-            builder.Services.AddSingleton<IBatchCloseService, BatchCloseService>();
+        
 
             return builder;
         }

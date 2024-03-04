@@ -6,9 +6,12 @@ namespace MonerisTest.Services.Implementations
 {
     public class ConvertTempToPermanentTokenService : IConvertTempToPermanentTokenService
     {
-        public void SaveTokenToVault(string token)
+        public Task<string?> SaveTokenToVault(string token)
         {
-            
+            string? permanentToken=null;
+
+
+            return Task.FromResult(permanentToken);
         }
     }
 }
