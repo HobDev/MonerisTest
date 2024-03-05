@@ -67,6 +67,9 @@ namespace MonerisTest
             builder.Services.AddTransient<CancellationPage>();
             builder.Services.AddTransient<CancellationViewModel>();
 
+
+        
+
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
@@ -79,7 +82,7 @@ namespace MonerisTest
         {
            
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
-            builder.Services.AddSingleton<IConvertTempToPermanentTokenService, ConvertTempToPermanentTokenService>();    
+            builder.Services.AddSingleton<IAddTokenService, AddTokenService>();    
             builder.Services.AddSingleton<IRefundService, RefundService>();
         
 

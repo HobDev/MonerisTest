@@ -2,7 +2,7 @@
 
 namespace MonerisTest.Services.Interfaces
 {
-    public interface IConvertTempToPermanentTokenService
+    public interface IAddTokenService
     {
         Task<string?> SaveTokenToVault(string token);
     }

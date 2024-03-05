@@ -10,22 +10,24 @@ namespace MonerisTest.ViewModels
     {
         [ObservableProperty]
         bool saveCard;
-
-       
+   
         string? tempToken;
-
-       
+     
         string? permanentToken;
 
 
-        private readonly IConvertTempToPermanentTokenService convertTempToPermanentTokenService;
+        //after getting temporary token the card verification is the first step in the payment process. The successful card verification returns an issuer ID. The issuer ID is use to save the permanent token in the Moneris account. The permanent token is used for current and future purchases.
+        private readonly ICardVerificationService cardVerificationService;
         private readonly IPurchaseService purchaseService;
+        private readonly IAddTokenService addTokenService;
+        
 
-        public PaymentWebViewModel(IConvertTempToPermanentTokenService convertTempToPermanentTokenService, IPurchaseService purchaseService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService)
         {
-
-            this.convertTempToPermanentTokenService = convertTempToPermanentTokenService;
+            this.cardVerificationService = cardVerificationService;
             this.purchaseService = purchaseService;
+            this.addTokenService = addTokenService;
+            
 
             saveCard = false;
 
@@ -52,17 +54,21 @@ namespace MonerisTest.ViewModels
 
         private async Task CompletePurchase(string token)
         {
-            purchaseService.Purchase(token);
+           await  purchaseService.Purchase(token);
         }
 
         async Task GetPermanentToken()
         {
             if (tempToken != null)
             {
-                permanentToken = await convertTempToPermanentTokenService.SaveTokenToVault(tempToken);
+                permanentToken = await addTokenService.SaveTokenToVault(tempToken);
                 if(permanentToken != null)
                 {
                   await  CompletePurchase(permanentToken);
+                }
+                else
+                {
+                    await CompletePurchase(tempToken);
                 }
             }
 
