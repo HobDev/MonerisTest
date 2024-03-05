@@ -1,19 +1,30 @@
 ﻿
-
-using Moneris;
+using static UIKit.UIGestureRecognizer;
+using System.Transactions;
 using MonerisTest.Services.Interfaces;
+using Moneris;
 
 namespace MonerisTest.Services.Implementations
 {
     public class CardVerificationService : ICardVerificationService
     {
-        public async Task VerifyPaymentCard()
-        {
-            String store_id = AppConstants.STORE_ID;
-            String api_token = AppConstants.API_TOKEN;
 
-            string data_key = "V6F9PJKdXQj6vKiCMNrWbsyJ2";
-            string order_id = "Test_P_033333_6";
+        String store_id = AppConstants.STORE_ID;
+        String api_token = AppConstants.API_TOKEN;
+
+       
+      
+
+
+        /// <summary>
+        /// When using a temporary token (e.g., such as with Hosted Tokenization) and you intend to store the cardholder credentials, this transaction must be run prior to running the Vault Add Token transaction
+        /// </summary>
+        /// <param name="tempToken"></param>
+        /// <returns></returns>
+        public async Task VerifyPaymentCard(string tempToken, string expDate)
+        {
+           
+            string order_id = Guid.NewGuid().ToString();
             string cust_id = "Customer1";
             string crypt = "7";
             string processing_country_code = "CA";
@@ -33,10 +44,10 @@ namespace MonerisTest.Services.Implementations
             cof.SetPaymentInformation("2");
             // cof.SetIssuerId("12345678901234");
             ResCardVerificationCC rescardverify = new ResCardVerificationCC();
-            rescardverify.SetDataKey(data_key);
+            rescardverify.SetDataKey(tempToken);
             rescardverify.SetOrderId(order_id);
             rescardverify.SetCustId(cust_id);
-            //rescardverify.SetExpDate("1612"); //for use with Temp Tokens only
+            rescardverify.SetExpDate(expDate); //for use with Temp Tokens only
             rescardverify.SetCryptType(crypt);
             rescardverify.SetAvsInfo(avsCheck);
             rescardverify.SetCvdInfo(cvdCheck);
@@ -55,33 +66,33 @@ namespace MonerisTest.Services.Implementations
             try
             {
                 Receipt receipt = mpgReq.GetReceipt();
-                Console.WriteLine("CardType = " + receipt.GetCardType());
-                Console.WriteLine("TransAmount = " + receipt.GetTransAmount());
-                Console.WriteLine("TxnNumber = " + receipt.GetTxnNumber());
-                Console.WriteLine("ReceiptId = " + receipt.GetReceiptId());
-                Console.WriteLine("TransType = " + receipt.GetTransType());
-                Console.WriteLine("ReferenceNum = " + receipt.GetReferenceNum());
-                Console.WriteLine("ResponseCode = " + receipt.GetResponseCode());
-                Console.WriteLine("ISO = " + receipt.GetISO());
-                Console.WriteLine("BankTotals = " + receipt.GetBankTotals());
-                Console.WriteLine("Message = " + receipt.GetMessage());
-                Console.WriteLine("AuthCode = " + receipt.GetAuthCode());
-                Console.WriteLine("Complete = " + receipt.GetComplete());
-                Console.WriteLine("TransDate = " + receipt.GetTransDate());
-                Console.WriteLine("TransTime = " + receipt.GetTransTime());
-                Console.WriteLine("Ticket = " + receipt.GetTicket());
-                Console.WriteLine("TimedOut = " + receipt.GetTimedOut());
-                Console.WriteLine("IsVisaDebit = " + receipt.GetIsVisaDebit());
-                Console.WriteLine("IssuerId = " + receipt.GetIssuerId());
-                Console.WriteLine("SourcePanLast4 = " + receipt.GetSourcePanLast4());
+                string cardType =  receipt.GetCardType();
+                string transAmount =  receipt.GetTransAmount();
+                string txnNumber =  receipt.GetTxnNumber();
+                string receiptId =  receipt.GetReceiptId();
+                string transType = receipt.GetTransType();
+                string referenceNum =  receipt.GetReferenceNum();
+                string responseCode = receipt.GetResponseCode();
+                string iSO =  receipt.GetISO();
+                string bankTotals = receipt.GetBankTotals();
+                string message =  receipt.GetMessage();
+                string authCode =  receipt.GetAuthCode();
+                string complete =  receipt.GetComplete();
+                string transDate = receipt.GetTransDate();
+                string transTime =  receipt.GetTransTime();
+                string ticket =  receipt.GetTicket();
+                string timedOut =  receipt.GetTimedOut();
+                string isVisaDebit =  receipt.GetIsVisaDebit();
+                string issuerId = receipt.GetIssuerId();
+                string sourcePanLast4 =  receipt.GetSourcePanLast4();
                 if (get_nt_response)
                 {
-                    Console.WriteLine("\nNTResponseCode = " + receipt.GetNTResponseCode());
-                    Console.WriteLine("NTMessage = " + receipt.GetNTMessage());
-                    Console.WriteLine("NTUsed = " + receipt.GetNTUsed());
-                    Console.WriteLine("NTTokenBin = " + receipt.GetNTTokenBin());
-                    Console.WriteLine("NTTokenLast4 = " + receipt.GetNTTokenLast4());
-                    Console.WriteLine("NTTokenExpDate = " + receipt.GetNTTokenExpDate());
+                    string nTResponseCode =  receipt.GetNTResponseCode();
+                    string nTMessage =  receipt.GetNTMessage();
+                    string nTUsed =  receipt.GetNTUsed();
+                    string nTTokenBin =  receipt.GetNTTokenBin();
+                    string nTTokenLast4 = receipt.GetNTTokenLast4();
+                    string nTTokenExpDate =  receipt.GetNTTokenExpDate();
                 }
                 Console.ReadLine();
             }

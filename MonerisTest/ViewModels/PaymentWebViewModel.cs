@@ -41,7 +41,7 @@ namespace MonerisTest.ViewModels
                     {
                        if(SaveCard)
                         {
-                            await GetPermanentToken();
+                           await VerifyCard();
                         }
                        else
                         {
@@ -50,6 +50,12 @@ namespace MonerisTest.ViewModels
                     }
                 });
             });
+        }
+
+        private async Task VerifyCard()
+        {
+            string expDate = "2212";
+            await cardVerificationService.VerifyPaymentCard(tempToken, expDate);
         }
 
         private async Task CompletePurchase(string token)
