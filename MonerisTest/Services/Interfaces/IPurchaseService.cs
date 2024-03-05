@@ -4,6 +4,6 @@ namespace MonerisTest.Services.Interfaces
 {
     public interface IPurchaseService
     {
-        Task Purchase();
+        Task Purchase(string token);
     }
 }

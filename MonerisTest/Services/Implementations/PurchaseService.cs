@@ -21,7 +21,7 @@ namespace MonerisTest.Services.Implementations
         String processing_country_code = "CA";
         bool status_check = false;
 
-        public async Task Purchase()
+        public async Task Purchase(string token)
         {
             Purchase purchase = new Purchase();
             purchase.SetOrderId(order_id);

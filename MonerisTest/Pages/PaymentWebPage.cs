@@ -36,6 +36,8 @@ public class PaymentWebPage : ContentPage
             }
         };
 
+       
+
         BindingContext = viewModel;
     }
 
