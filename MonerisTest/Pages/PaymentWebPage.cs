@@ -29,8 +29,8 @@ public class PaymentWebPage : ContentPage
 
                 new HorizontalStackLayout
                 {
-                    new CheckBox{},
-                    new Label{Text="Save Card for future purchases"}
+                    new Label{Text="Save Card for future purchases", TextColor= Colors.Black, VerticalOptions=LayoutOptions.Center},
+                     new CheckBox{},
                 }
                 
             }
