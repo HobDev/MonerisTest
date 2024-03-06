@@ -9,21 +9,23 @@ public class PaymentWebPage : ContentPage
 {
     public PaymentWebPage(PaymentWebViewModel viewModel)
     {
-        HybridWebView.HybridWebView hybridWebView = new HybridWebView.HybridWebView
+        try
         {
-            HybridAssetRoot = "hybrid_root",
-            MainFile = "index.html"
+            HybridWebView.HybridWebView hybridWebView = new HybridWebView.HybridWebView
+            {
+                HybridAssetRoot = "hybrid_root",
+                MainFile = "index.html"
 
-        };
+            };
 
 
-        hybridWebView.JSInvokeTarget = new MyJSInvokeTarget(this);
+            hybridWebView.JSInvokeTarget = new MyJSInvokeTarget(this);
 
-        Content =new VerticalStackLayout
-        {
-            Spacing = 20,
-            Margin = new Thickness(20, 30, 20, 0),
-            Children =
+            Content = new VerticalStackLayout
+            {
+                Spacing = 20,
+                Margin = new Thickness(20, 30, 20, 0),
+                Children =
             {
                 hybridWebView,
 
@@ -32,13 +34,20 @@ public class PaymentWebPage : ContentPage
                     new Label{Text="Save Card for future purchases", TextColor= Colors.Black, VerticalOptions=LayoutOptions.Center},
                      new CheckBox{},
                 }
-                
+
             }
-        };
+            };
 
-       
 
-        BindingContext = viewModel;
+
+            BindingContext = viewModel;
+        }
+        catch (Exception ex)
+        {
+
+           
+        }
+        
     }
 
    
@@ -54,17 +63,26 @@ public class PaymentWebPage : ContentPage
 
         public async void CallMeFromScript(string? dataKey, string? bin)
         {
-            // Handle the message received from JavaScript
-
-            if (dataKey != null)
+            try
             {
-                // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    WeakReferenceMessenger.Default.Send(new TokenMessage(dataKey));
-                });
+                // Handle the message received from JavaScript
 
+                if (dataKey != null)
+                {
+                    // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        WeakReferenceMessenger.Default.Send(new TokenMessage(dataKey));
+                    });
+
+                }
             }
+            catch (Exception ex)
+            {
+
+             
+            }
+           
 
         }
     }

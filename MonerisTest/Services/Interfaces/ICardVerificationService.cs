@@ -4,6 +4,6 @@ namespace MonerisTest.Services.Interfaces
 {
     public interface ICardVerificationService
     {
-        Task VerifyPaymentCard(string tempToken, string expDate);
+        Task VerifyPaymentCard(string tempToken);
     }
 }

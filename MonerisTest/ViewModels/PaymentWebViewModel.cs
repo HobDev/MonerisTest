@@ -24,38 +24,42 @@ namespace MonerisTest.ViewModels
 
         public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService)
         {
-            this.cardVerificationService = cardVerificationService;
-            this.purchaseService = purchaseService;
-            this.addTokenService = addTokenService;
-            
-
-            saveCard = false;
-
-            WeakReferenceMessenger.Default.Register<string>(this, (sender, message) =>
+            try
             {
-                // Handle the message
-                MainThread.BeginInvokeOnMainThread(async () =>
+                this.cardVerificationService = cardVerificationService;
+                this.purchaseService = purchaseService;
+                this.addTokenService = addTokenService;
+
+
+                saveCard = false;
+
+                WeakReferenceMessenger.Default.Register<TokenMessage>(this, (sender, message) =>
                 {
-                    string? tempToken = message;
-                    if (tempToken != null)
+                    // Handle the message
+                    MainThread.BeginInvokeOnMainThread(async () =>
                     {
-                       if(SaveCard)
+                        string? tempToken = message.Value;
+                        if (tempToken != null)
                         {
-                           await VerifyCard();
+
+                            await VerifyCard();
+
                         }
-                       else
-                        {
-                          await  CompletePurchase(tempToken);
-                        }
-                    }
+                    });
                 });
-            });
+            }
+            catch (Exception ex)
+            {
+
+               
+            }
+           
         }
 
         private async Task VerifyCard()
         {
-            string expDate = "2212";
-            await cardVerificationService.VerifyPaymentCard(tempToken, expDate);
+            
+            await cardVerificationService.VerifyPaymentCard(tempToken);
         }
 
         private async Task CompletePurchase(string token)

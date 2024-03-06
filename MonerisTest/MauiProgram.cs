@@ -80,9 +80,9 @@ namespace MonerisTest
 
         public static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
         {
-           
+            builder.Services.AddSingleton<ICardVerificationService, CardVerificationService>();
+            builder.Services.AddSingleton<IAddTokenService, AddTokenService>();
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
-            builder.Services.AddSingleton<IAddTokenService, AddTokenService>();    
             builder.Services.AddSingleton<IRefundService, RefundService>();
         
 

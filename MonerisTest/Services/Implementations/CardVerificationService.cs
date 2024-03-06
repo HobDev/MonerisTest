@@ -1,5 +1,4 @@
 ﻿
-using static UIKit.UIGestureRecognizer;
 using System.Transactions;
 using MonerisTest.Services.Interfaces;
 using Moneris;
@@ -21,7 +20,7 @@ namespace MonerisTest.Services.Implementations
         /// </summary>
         /// <param name="tempToken"></param>
         /// <returns></returns>
-        public async Task VerifyPaymentCard(string tempToken, string expDate)
+        public async Task VerifyPaymentCard(string tempToken)
         {
            
             string order_id = Guid.NewGuid().ToString();
@@ -47,7 +46,7 @@ namespace MonerisTest.Services.Implementations
             rescardverify.SetDataKey(tempToken);
             rescardverify.SetOrderId(order_id);
             rescardverify.SetCustId(cust_id);
-            rescardverify.SetExpDate(expDate); //for use with Temp Tokens only
+           // rescardverify.SetExpDate(expDate); //for use with Temp Tokens only
             rescardverify.SetCryptType(crypt);
             rescardverify.SetAvsInfo(avsCheck);
             rescardverify.SetCvdInfo(cvdCheck);
@@ -94,13 +93,13 @@ namespace MonerisTest.Services.Implementations
                     string nTTokenLast4 = receipt.GetNTTokenLast4();
                     string nTTokenExpDate =  receipt.GetNTTokenExpDate();
                 }
-                Console.ReadLine();
+               
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
-    } // end TestResCardVerificationCC
+    } 
 }
         
