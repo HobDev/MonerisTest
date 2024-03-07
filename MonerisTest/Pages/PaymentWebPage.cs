@@ -21,6 +21,9 @@ public class PaymentWebPage : ContentPage
 
             hybridWebView.JSInvokeTarget = new MyJSInvokeTarget(this);
 
+            CheckBox checkBox = new CheckBox();
+            checkBox.SetBinding(CheckBox.IsCheckedProperty, nameof(viewModel.SaveCard));
+
             Content = new VerticalStackLayout
             {
                 Spacing = 20,
@@ -32,7 +35,7 @@ public class PaymentWebPage : ContentPage
                 new HorizontalStackLayout
                 {
                     new Label{Text="Save Card for future purchases", TextColor= Colors.Black, VerticalOptions=LayoutOptions.Center},
-                     new CheckBox{},
+                     checkBox,
                 }
 
             }

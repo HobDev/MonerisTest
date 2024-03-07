@@ -38,7 +38,7 @@ namespace MonerisTest.ViewModels
                     // Handle the message
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
-                        string? tempToken = message.Value;
+                        tempToken = message.Value;
                         if (tempToken != null)
                         {
 
@@ -59,7 +59,18 @@ namespace MonerisTest.ViewModels
         private async Task VerifyCard()
         {
             
-            await cardVerificationService.VerifyPaymentCard(tempToken);
+          string? issuerId=  await cardVerificationService.VerifyPaymentCard(tempToken);
+            if(issuerId != null)
+            {
+                if(SaveCard)
+                {
+                    await GetPermanentToken(issuerId);
+                }
+                else
+                {
+                    await CompletePurchase(tempToken);
+                }
+            }
         }
 
         private async Task CompletePurchase(string token)
@@ -67,11 +78,11 @@ namespace MonerisTest.ViewModels
            await  purchaseService.Purchase(token);
         }
 
-        async Task GetPermanentToken()
+        async Task GetPermanentToken(string issuerId)
         {
             if (tempToken != null)
             {
-                permanentToken = await addTokenService.SaveTokenToVault(tempToken);
+                permanentToken = await addTokenService.SaveTokenToVault(issuerId, tempToken);
                 if(permanentToken != null)
                 {
                   await  CompletePurchase(permanentToken);

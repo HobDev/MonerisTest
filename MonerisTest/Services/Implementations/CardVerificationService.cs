@@ -20,7 +20,7 @@ namespace MonerisTest.Services.Implementations
         /// </summary>
         /// <param name="tempToken"></param>
         /// <returns></returns>
-        public async Task VerifyPaymentCard(string tempToken)
+        public async Task<string?> VerifyPaymentCard(string tempToken)
         {
            
             string order_id = Guid.NewGuid().ToString();
@@ -28,19 +28,12 @@ namespace MonerisTest.Services.Implementations
             string crypt = "7";
             string processing_country_code = "CA";
             bool status_check = false;
-            /*************** Address Verification Service **********************/
-            AvsInfo avsCheck = new AvsInfo();
-            avsCheck.SetAvsStreetNumber("212");
-            avsCheck.SetAvsStreetName("Payton Street");
-            avsCheck.SetAvsZipCode("M1M1M1");
-            /****************** Card Validation Digits *************************/
-            CvdInfo cvdCheck = new CvdInfo();
-            cvdCheck.SetCvdIndicator("1");
-            cvdCheck.SetCvdValue("099");
+           
+           
             /*************** Credential on File *************************************/
             CofInfo cof = new CofInfo();
             cof.SetPaymentIndicator("U");
-            cof.SetPaymentInformation("2");
+            cof.SetPaymentInformation("0");
             // cof.SetIssuerId("12345678901234");
             ResCardVerificationCC rescardverify = new ResCardVerificationCC();
             rescardverify.SetDataKey(tempToken);
@@ -48,8 +41,6 @@ namespace MonerisTest.Services.Implementations
             rescardverify.SetCustId(cust_id);
            // rescardverify.SetExpDate(expDate); //for use with Temp Tokens only
             rescardverify.SetCryptType(crypt);
-            rescardverify.SetAvsInfo(avsCheck);
-            rescardverify.SetCvdInfo(cvdCheck);
             rescardverify.SetCofInfo(cof);
             //NT Response Option
             bool get_nt_response = true;
@@ -93,12 +84,14 @@ namespace MonerisTest.Services.Implementations
                     string nTTokenLast4 = receipt.GetNTTokenLast4();
                     string nTTokenExpDate =  receipt.GetNTTokenExpDate();
                 }
-               
+
+                return issuerId;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+            return null;
         }
     } 
 }

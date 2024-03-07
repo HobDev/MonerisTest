@@ -2,6 +2,7 @@
 
 using Moneris;
 using MonerisTest.Services.Interfaces;
+using static Android.Provider.ContactsContract.CommonDataKinds;
 
 namespace MonerisTest.Services.Implementations
 {
@@ -11,33 +12,33 @@ namespace MonerisTest.Services.Implementations
         String api_token = AppConstants.API_TOKEN;
 
         
-        string crypt_type = "7";
-        string data_key_format = "0";
-        string processing_country_code = "CA";
-        bool status_check = false;
+      
 
-        public Task<string?> SaveTokenToVault(string tempToken)
+        public Task<string?> SaveTokenToVault(string issuerId, string tempToken)
         {
-            string? permanentToken=null;
-           
+
+            string crypt_type = "7";
+            bool status_check = false;
+
             CofInfo cof = new CofInfo();
-            cof.SetIssuerId("168451306048014");
-            ResAddToken resAddToken = new ResAddToken(tempToken, crypt_type);
-            
+            cof.SetIssuerId(issuerId);
+
+            ResAddToken resAddToken = new ResAddToken(tempToken,crypt_type );
             resAddToken.SetCofInfo(cof);
             //resAddToken.SetDataKeyFormat(data_key_format); //optional
+
             HttpsPostRequest mpgReq = new HttpsPostRequest();
-            mpgReq.SetProcCountryCode(processing_country_code);
-            mpgReq.SetTestMode(true); //false for production transactions
+            mpgReq.SetTestMode(true); //false or comment out this line for production transactions
             mpgReq.SetStoreId(store_id);
             mpgReq.SetApiToken(api_token);
             mpgReq.SetTransaction(resAddToken);
             mpgReq.SetStatusCheck(status_check);
             mpgReq.Send();
+
             try
             {
                 Receipt receipt = mpgReq.GetReceipt();
-                string aataKey =  receipt.GetDataKey();
+                string dataKey =  receipt.GetDataKey();
                 string  responseCode  = receipt.GetResponseCode();
                 string message =  receipt.GetMessage();
                 string transDate =  receipt.GetTransDate();
@@ -56,14 +57,15 @@ namespace MonerisTest.Services.Implementations
                 string avs_Street_Number =  receipt.GetResDataAvsStreetNumber();
                 string avs_Street_Name =  receipt.GetResDataAvsStreetName();
                 string avs_Zipcode =  receipt.GetResDataAvsZipcode();
-                Console.ReadLine();
+
+                return Task.FromResult(dataKey);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
 
-return Task.FromResult(permanentToken);
+return null;
         }
     }
 }
