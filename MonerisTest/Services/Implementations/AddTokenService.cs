@@ -2,7 +2,7 @@
 
 using Moneris;
 using MonerisTest.Services.Interfaces;
-using static Android.Provider.ContactsContract.CommonDataKinds;
+
 
 namespace MonerisTest.Services.Implementations
 {
