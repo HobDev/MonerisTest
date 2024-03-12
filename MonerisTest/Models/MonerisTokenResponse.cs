@@ -1,6 +1,4 @@
-﻿
-
-namespace MonerisTest
+﻿namespace MonerisTest.Models
 {
     public class MonerisTokenResponse
     {
