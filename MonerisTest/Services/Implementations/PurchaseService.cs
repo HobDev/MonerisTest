@@ -1,6 +1,7 @@
 ﻿
 
 using Moneris;
+using MonerisTest.Models;
 using MonerisTest.Services.Interfaces;
 
 namespace MonerisTest.Services.Implementations
@@ -81,6 +82,12 @@ namespace MonerisTest.Services.Implementations
                 string avs_Street_Number =  receipt.GetResDataAvsStreetNumber();
                 string avs_Street_Name =  receipt.GetResDataAvsStreetName();
                 string avs_Zipcode = receipt.GetResDataAvsZipcode();
+
+
+                CardHolderTransactionRecordPurchase cardHolderTransactionRecordPurchase = new CardHolderTransactionRecordPurchase()
+                {
+
+                };
               
             }
             catch (Exception e)

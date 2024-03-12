@@ -1,16 +1,18 @@
 ﻿
+
 namespace MonerisTest.Models
 {
-    public class CardholderReceipt
+    public class CardHolderTransactionRecordPurchase
     {
+
         // legal name of the merchant
-        public string MerchantName { get; set; }
+        public string MerchantName { get; set; } = "Daflo Innovation Inc.";
 
         // postal address of the Merchant   
-        public string StroreAddress { get; set; }
+        public string StroreAddress { get; set; } = "117 Vanier Street\r\nWhitby\r\nL1R 3J8";
 
         // web address of the Merchant
-        public string MerchantUrl { get; set; }
+        public string MerchantUrl { get; set; } = "https://www.dafloinnovations.com";
 
         // the type of transaction, e.g. purchase, refund, etc.
         public string TransactionType { get; set; }
@@ -30,7 +32,7 @@ namespace MonerisTest.Models
         public string ISOCode { get; set; }
 
         // code returned from the transaction   
-        public string ResponseCode { get; set; }    
+        public string ResponseCode { get; set; }
 
         public string Goods_Description { get; set; }
 
@@ -38,13 +40,11 @@ namespace MonerisTest.Models
 
         public string Currency_Code { get; set; }
 
-        public string CardHolderName { get; set; }  
+        public string CardHolderName { get; set; }
 
-        public string CardHolderAddress { get; set; }   
+        public string CardHolderAddress { get; set; }
 
         // any restrictions on refunds and returns
-        public string Restrictions { get; set; }    
-
-
+        public string Restrictions { get; set; }
     }
 }
