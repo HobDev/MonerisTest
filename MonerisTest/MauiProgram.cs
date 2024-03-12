@@ -60,8 +60,8 @@ namespace MonerisTest
 
             builder.Services.AddHybridWebView();
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSingleton <BookingPage>();
-            builder.Services.AddSingleton<BookingViewModel>();
+            builder.Services.AddTransient<BookingPage>();
+            builder.Services.AddTransient<BookingViewModel>();
             builder.Services.AddTransient<PaymentWebPage>();
             builder.Services.AddTransient<PaymentWebViewModel>();
             builder.Services.AddTransient<CancellationPage>();

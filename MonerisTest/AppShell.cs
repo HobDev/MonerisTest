@@ -18,6 +18,8 @@ namespace MonerisTest
                 ContentTemplate = new DataTemplate(typeof(BookingPage))
             });
 
+           
+
             // first initiate the refund and then cancel the booking. The refund is done if the payment is already settled by the payment gateway. Both the payment and the refund will be shown in the bank statement of the customer.
             Items.Add(new ShellContent
             {
