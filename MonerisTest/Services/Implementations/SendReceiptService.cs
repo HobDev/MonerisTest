@@ -8,7 +8,7 @@ namespace MonerisTest.Services.Implementations
         public async Task SendReceiptToCustomer(CardHolderTransactionRecordPurchase cardHolderTransactionRecord)
         {
 
-            CardholderReceipt cardHolderReceipt = new CardholderReceipt()
+            CardholderReceipt cardHolderReceipt = new()
             {
 
             };
@@ -16,7 +16,7 @@ namespace MonerisTest.Services.Implementations
 
         public async Task SendReceiptToMerchant(CardHolderTransactionRecordPurchase cardHolderTransactionRecord)
         {
-           MerchantCopyReceipt merchantCopyReceipt = new MerchantCopyReceipt()
+           MerchantCopyReceipt merchantCopyReceipt = new()
            {
 
            };

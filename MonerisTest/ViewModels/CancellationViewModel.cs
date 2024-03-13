@@ -5,7 +5,7 @@ namespace MonerisTest.ViewModels
     public partial class CancellationViewModel
     {
 
-        private readonly IRefundService refundService;
+        private readonly IRefundService? refundService;
         public CancellationViewModel(IRefundService refundService)
         {
             try
@@ -26,6 +26,10 @@ namespace MonerisTest.ViewModels
         {
             try
             {
+                if(refundService==null)
+                {
+                    throw new Exception("Refund Service is not available");
+                }
                 await refundService.Refund();
             }
             catch (Exception ex)

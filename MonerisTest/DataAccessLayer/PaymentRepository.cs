@@ -8,7 +8,7 @@ namespace MonerisTest.DataAccessLayer
     {
         public SQLiteAsyncConnection? dbConnection;
 
-        string dbPath;
+        string  dbPath;
 
         const SQLite.SQLiteOpenFlags Flags=
             // open the database in read/write mode
@@ -52,76 +52,102 @@ namespace MonerisTest.DataAccessLayer
             }
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>?> GetAll()
         {
             try
             {
-                return await dbConnection.Table<T>().ToListAsync();
+                if(dbConnection!=null)
+                {
+                    return await dbConnection.Table<T>().ToListAsync();
+                }
+              
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
-                return new List<T>();
+                return [];
             }
+            return null;
         }
 
-        public async Task<T> Get(int id)
+        public async Task<T?> Get(int id)
         {
             try
             {
-                return await dbConnection.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
+                if(dbConnection!=null)
+                {
+                    return await dbConnection.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
+                }
+               
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return new T();
             }
+            return null;
         }
 
         public async Task<int> Save(T entity)
         {
             try
             {
-                if (entity.Id != 0)
+                if(dbConnection!=null)
                 {
-                    return await dbConnection.UpdateAsync(entity);
+                    if (entity.Id != 0)
+                    {
+                        return await dbConnection.UpdateAsync(entity);
+                    }
+                    else
+                    {
+                        return await dbConnection.InsertAsync(entity);
+                    }
                 }
-                else
-                {
-                    return await dbConnection.InsertAsync(entity);
-                }
+               
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return 0;
             }
+            return 0;
         }
 
         public async Task<int> Delete(T entity)
         {
             try
             {
-                return await dbConnection.DeleteAsync(entity);
+                if(dbConnection!=null)
+                {
+                    return await dbConnection.DeleteAsync(entity);
+                }
+               
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return 0;
             }
+            return 0;
         }
 
         public async Task<int> DeleteAll()
         {
             try
             {
-                return await dbConnection.DeleteAllAsync<T>();
+                if(dbConnection!=null)
+                {
+                    return await dbConnection.DeleteAllAsync<T>();
+                }
+                
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return 0;
             }
+
+            return 0;
         }
 
 

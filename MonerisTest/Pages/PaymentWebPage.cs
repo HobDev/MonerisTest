@@ -8,17 +8,14 @@ public class PaymentWebPage : ContentPage
     {
         try
         {
-            HybridWebView.HybridWebView hybridWebView = new HybridWebView.HybridWebView
+            HybridWebView.HybridWebView hybridWebView = new()
             {
                 HybridAssetRoot = "hybrid_root",
-                MainFile = "index.html"
-
+                MainFile = "index.html",
+                JSInvokeTarget = new MyJSInvokeTarget(this)
             };
 
-
-            hybridWebView.JSInvokeTarget = new MyJSInvokeTarget(this);
-
-            CheckBox checkBox = new CheckBox();
+            CheckBox checkBox = new();
             checkBox.SetBinding(CheckBox.IsCheckedProperty, nameof(viewModel.SaveCard));
 
             Content = new VerticalStackLayout
@@ -54,14 +51,14 @@ public class PaymentWebPage : ContentPage
 
     private sealed class MyJSInvokeTarget
     {
-        private PaymentWebPage _mainPage;
+        private readonly PaymentWebPage _mainPage;
 
         public MyJSInvokeTarget(PaymentWebPage mainPage)
         {
             _mainPage = mainPage;
         }
 
-        public async void CallMeFromScript(string? dataKey, string? bin)
+        public static async void CallMeFromScript(string? dataKey, string? bin)
         {
             try
             {
@@ -79,7 +76,7 @@ public class PaymentWebPage : ContentPage
             }
             catch (Exception ex)
             {
-
+                await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
              
             }
            

@@ -9,16 +9,16 @@ namespace MonerisTest
         decimal totalAmount;
 
         [ObservableProperty]
-        string cardType;
+        string? cardType;
 
         [ObservableProperty]
-        string maskedCardNumber;
+        string? maskedCardNumber;
 
         public BookingViewModel()
         {
             try
             {
-                Customer customer = new Customer()
+                Customer customer = new()
                 {
                     Name = "John Doe",
                     Email = "johndoe@example.com",
@@ -50,7 +50,7 @@ namespace MonerisTest
 
 
         [RelayCommand]
-        private async Task Purchase()
+        private static async Task Purchase()
         {
             try
             {

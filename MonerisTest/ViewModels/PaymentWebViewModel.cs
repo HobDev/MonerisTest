@@ -15,9 +15,9 @@ namespace MonerisTest.ViewModels
 
 
         //after getting temporary token the card verification is the first step in the payment process. The successful card verification returns an issuer ID. The issuer ID is use to save the permanent token in the Moneris account. The permanent token is used for current and future purchases.
-        private readonly ICardVerificationService cardVerificationService;
-        private readonly IPurchaseService purchaseService;
-        private readonly IAddTokenService addTokenService;
+        private readonly ICardVerificationService? cardVerificationService;
+        private readonly IPurchaseService? purchaseService;
+        private readonly IAddTokenService? addTokenService;
         
 
         public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService)
@@ -49,7 +49,7 @@ namespace MonerisTest.ViewModels
             catch (Exception ex)
             {
 
-               
+               Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
            
         }
@@ -58,6 +58,14 @@ namespace MonerisTest.ViewModels
         {
             try
             {
+                if(cardVerificationService==null )
+                {
+                    throw new Exception("Card Verification Service is not available");
+                }
+                else if(tempToken==null)
+                {
+                    throw new Exception("Temporary Token is not available");
+                }   
                 string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
                 if (issuerId != null)
                 {
@@ -83,6 +91,10 @@ namespace MonerisTest.ViewModels
         {
             try
             {
+                if(purchaseService==null)
+                {
+                    throw new Exception("Purchase Service is not available");
+                }
                 await purchaseService.Purchase(token);
             }
             catch (Exception ex)
@@ -99,6 +111,10 @@ namespace MonerisTest.ViewModels
             {
                 if (tempToken != null)
                 {
+                    if(addTokenService==null)
+                    {
+                        throw new Exception("Add Token Service is not available");
+                    }
                     permanentToken = await addTokenService.SaveTokenToVault(issuerId, tempToken);
                     if (permanentToken != null)
                     {
