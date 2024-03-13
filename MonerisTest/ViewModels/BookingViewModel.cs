@@ -16,21 +16,29 @@ namespace MonerisTest
 
         public BookingViewModel()
         {
-
-            Customer customer = new Customer()
+            try
             {
-                Name = "John Doe",
-                Email = "johndoe@example.com",
-                PhoneNumber = "+12345",
-                Address = "Whitby, Canada",
-                MaskedCardNumber = "**** **** **** 4242",
-                CardToken = "something",
-                CardExpiryDate = "1224",
-                CardType = "Visa Debit",
-                CardHolderName = "John Doe",
-                CardBankName = "Bank of Montreal"
+                Customer customer = new Customer()
+                {
+                    Name = "John Doe",
+                    Email = "johndoe@example.com",
+                    PhoneNumber = "+12345",
+                    Address = "Whitby, Canada",
+                    MaskedCardNumber = "**** **** **** 4242",
+                    CardToken = "something",
+                    CardExpiryDate = "1224",
+                    CardType = "Visa Debit",
+                    CardHolderName = "John Doe",
+                    CardBankName = "Bank of Montreal"
 
-            };
+                };
+            }
+            catch (Exception ex)
+            {
+
+                Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
+            }
+          
         }
 
 
@@ -38,7 +46,16 @@ namespace MonerisTest
         [RelayCommand]
         private async Task Purchase()
         {
-          await Shell.Current.GoToAsync("PaymentWebPage");
+            try
+            {
+                await Shell.Current.GoToAsync("PaymentWebPage");
+            }
+            catch (Exception ex)
+            {
+
+               await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
+            }
+           
         }
 
       

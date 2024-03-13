@@ -44,7 +44,7 @@ public class PaymentWebPage : ContentPage
         }
         catch (Exception ex)
         {
-
+            Shell.Current.DisplayAlert("Error", ex.Message, "Ok");  
            
         }
         

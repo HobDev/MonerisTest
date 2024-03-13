@@ -6,22 +6,31 @@ public class BookingPage : ContentPage
 {
     public BookingPage(BookingViewModel viewModel)
     {
-        Content = new VerticalStackLayout
+        try
         {
-            Spacing = 20,
+            Content = new VerticalStackLayout
+            {
+                Spacing = 20,
 
-            Margin = new Thickness(20, 30, 20, 0),
-            Children =
+                Margin = new Thickness(20, 30, 20, 0),
+                Children =
             {
                 new Label{FontSize=30, FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.TotalAmount), stringFormat:"Amount Payable {0}"),
                 new Label{FontSize=20, FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CardType)),
                 new Label{FontSize=20, FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.MaskedCardNumber)),
                 new Button{Text="PurChase", Command= viewModel.PurchaseCommand}.Bind(Button.TextProperty,nameof(viewModel.TotalAmount), stringFormat: "${0} - Pay Now"),
-            
-               
-            }
-        };
 
-        BindingContext = viewModel;
+
+            }
+            };
+
+            BindingContext = viewModel;
+        }
+        catch (Exception ex)
+        {
+
+            Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
+       
     }
 }

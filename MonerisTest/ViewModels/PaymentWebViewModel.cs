@@ -56,40 +56,66 @@ namespace MonerisTest.ViewModels
 
         private async Task VerifyCard()
         {
-            
-          string? issuerId=  await cardVerificationService.VerifyPaymentCard(tempToken);
-            if(issuerId != null)
+            try
             {
-                if(SaveCard)
+                string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
+                if (issuerId != null)
                 {
-                    await GetPermanentToken(issuerId);
-                }
-                else
-                {
-                    await CompletePurchase(tempToken);
+                    if (SaveCard)
+                    {
+                        await GetPermanentToken(issuerId);
+                    }
+                    else
+                    {
+                        await CompletePurchase(tempToken);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+
+               await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+        
         }
 
         private async Task CompletePurchase(string token)
         {
-           await  purchaseService.Purchase(token);
+            try
+            {
+                await purchaseService.Purchase(token);
+            }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+          
         }
 
         async Task GetPermanentToken(string issuerId)
         {
-            if (tempToken != null)
+            try
             {
-                permanentToken = await addTokenService.SaveTokenToVault(issuerId, tempToken);
-                if(permanentToken != null)
+                if (tempToken != null)
                 {
-                  await  CompletePurchase(permanentToken);
-                }
-                else
-                {
-                    await CompletePurchase(tempToken);
+                    permanentToken = await addTokenService.SaveTokenToVault(issuerId, tempToken);
+                    if (permanentToken != null)
+                    {
+                        await CompletePurchase(permanentToken);
+                    }
+                    else
+                    {
+                        await CompletePurchase(tempToken);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+           
 
         }
 
