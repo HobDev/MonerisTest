@@ -1,6 +1,5 @@
 ﻿
 
-
 namespace MonerisTest
 {
     public static class MauiProgram
@@ -18,6 +17,8 @@ namespace MonerisTest
                 });
 
 
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "MonerisTest.db3");
+            builder.Services.AddSingleton<PaymentRepository>(s=>ActivatorUtilities.CreateInstance<PaymentRepository>(s,dbPath));
 
             builder.Services.AddHybridWebView();
             builder.Services.AddTransient<BookingPage>();
