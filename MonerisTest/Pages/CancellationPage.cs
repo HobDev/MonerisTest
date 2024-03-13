@@ -2,6 +2,7 @@
 
 namespace MonerisTest.Pages;
 
+// first initiate the refund and then cancel the booking. The refund is done if the payment is already settled by the payment gateway. Both the payment and the refund will be shown in the bank statement of the customer.
 public class CancellationPage : ContentPage
 {
 	public CancellationPage(CancellationViewModel viewModel)

@@ -21,6 +21,8 @@ namespace MonerisTest
             builder.Services.AddSingleton<PaymentRepository>(s=>ActivatorUtilities.CreateInstance<PaymentRepository>(s,dbPath));
 
             builder.Services.AddHybridWebView();
+            builder.Services.AddTransient<CustomersPage>();
+            builder.Services.AddTransient<CustomersViewModel>();
             builder.Services.AddTransient<BookingPage>();
             builder.Services.AddTransient<BookingViewModel>();
             builder.Services.AddTransient<PaymentWebPage>();

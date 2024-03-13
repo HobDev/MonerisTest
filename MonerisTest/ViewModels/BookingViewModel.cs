@@ -32,6 +32,12 @@ namespace MonerisTest
                     CardBankName = "Bank of Montreal"
 
                 };
+
+                TotalAmount = 1;
+                CardType = customer.CardType;
+                MaskedCardNumber = customer.MaskedCardNumber;
+
+
             }
             catch (Exception ex)
             {
