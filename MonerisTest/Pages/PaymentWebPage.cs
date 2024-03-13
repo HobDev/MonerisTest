@@ -1,7 +1,4 @@
-using CommunityToolkit.Mvvm.Messaging;
-using HybridWebView;
-using MonerisTest.ViewModels;
-using System.Text.Json.Serialization;
+
 
 namespace MonerisTest.Pages;
 

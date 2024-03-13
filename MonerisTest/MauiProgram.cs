@@ -1,10 +1,5 @@
 ﻿
-using Microsoft.Extensions.Logging;
-using Microsoft.Maui.LifecycleEvents;
-using MonerisTest.Pages;
-using MonerisTest.Services.Implementations;
-using MonerisTest.Services.Interfaces;
-using MonerisTest.ViewModels;
+
 
 namespace MonerisTest
 {
@@ -15,7 +10,8 @@ namespace MonerisTest
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                  .ConfigureServices()
+                .UseMauiCommunityToolkitMarkup()
+                .ConfigureServices()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

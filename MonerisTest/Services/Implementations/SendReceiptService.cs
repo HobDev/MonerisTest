@@ -1,6 +1,5 @@
 ﻿
-using MonerisTest.Models;
-using MonerisTest.Services.Interfaces;
+
 
 namespace MonerisTest.Services.Implementations
 {

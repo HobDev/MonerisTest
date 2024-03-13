@@ -1,7 +1,4 @@
 ﻿
-using System.Transactions;
-using MonerisTest.Services.Interfaces;
-using Moneris;
 
 namespace MonerisTest.Services.Implementations
 {

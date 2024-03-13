@@ -1,8 +1,6 @@
 ﻿
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using MonerisTest.Services.Interfaces;
+
 
 namespace MonerisTest.ViewModels
 {

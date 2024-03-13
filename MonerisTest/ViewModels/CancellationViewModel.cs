@@ -1,8 +1,5 @@
 ﻿
 
-using CommunityToolkit.Mvvm.Input;
-using MonerisTest.Services.Interfaces;
-
 namespace MonerisTest.ViewModels
 {
     public partial class CancellationViewModel
