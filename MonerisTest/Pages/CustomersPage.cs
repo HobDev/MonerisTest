@@ -13,6 +13,8 @@ public class CustomersPage : ContentPage
                 }
             }
             };
+
+			BindingContext = viewModel;
         }
 		catch (Exception ex)
 		{

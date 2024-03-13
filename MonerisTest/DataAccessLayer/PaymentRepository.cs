@@ -4,7 +4,7 @@ using SQLite;
 
 namespace MonerisTest.DataAccessLayer
 {
-    public class PaymentRepository
+    public class PaymentRepository<T> where T :Entity , new()   
     {
         public SQLiteAsyncConnection? dbConnection;
 
@@ -51,6 +51,80 @@ namespace MonerisTest.DataAccessLayer
                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
         }
+
+        public async Task<List<T>> GetAll()
+        {
+            try
+            {
+                return await dbConnection.Table<T>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                return new List<T>();
+            }
+        }
+
+        public async Task<T> Get(int id)
+        {
+            try
+            {
+                return await dbConnection.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                return new T();
+            }
+        }
+
+        public async Task<int> Save(T entity)
+        {
+            try
+            {
+                if (entity.Id != 0)
+                {
+                    return await dbConnection.UpdateAsync(entity);
+                }
+                else
+                {
+                    return await dbConnection.InsertAsync(entity);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                return 0;
+            }
+        }
+
+        public async Task<int> Delete(T entity)
+        {
+            try
+            {
+                return await dbConnection.DeleteAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                return 0;
+            }
+        }
+
+        public async Task<int> DeleteAll()
+        {
+            try
+            {
+                return await dbConnection.DeleteAllAsync<T>();
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+                return 0;
+            }
+        }
+
+
 
     }
 }

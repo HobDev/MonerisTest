@@ -2,33 +2,19 @@
 {
     public partial class App : Application
     {
-        public App()
+
+        public static PaymentRepository<Entity> PaymentRepo { get; set; }
+
+        public App( PaymentRepository<Entity> paymentRepo)
         {
             InitializeComponent();
 
-          //  MainPage = new MainPage();
+            PaymentRepo = paymentRepo; 
 
+         
             MainPage = new AppShell();
         }
 
-        protected override async void OnAppLinkRequestReceived(Uri uri)
-        {
-            base.OnAppLinkRequestReceived(uri);
-
-            // Show an alert to test the app link worked
-
-            await this.Dispatcher.DispatchAsync(() =>
-            {
-                this.Windows[0].Page!.DisplayAlert(
-                    "App Link Opened",
-                    uri.ToString(),
-                    "OK");
-            });
-
-            Console.WriteLine("APP LINK: " + uri.ToString());
-        }
-
-        //protected override Window CreateWindow(IActivationState? activationState)
-        //    => new Window(new MainPage());
+      
     }
 }

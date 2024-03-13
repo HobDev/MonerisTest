@@ -18,7 +18,7 @@ namespace MonerisTest
 
 
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "MonerisTest.db3");
-            builder.Services.AddSingleton<PaymentRepository>(s=>ActivatorUtilities.CreateInstance<PaymentRepository>(s,dbPath));
+            builder.Services.AddSingleton<PaymentRepository<Entity>>(s=>ActivatorUtilities.CreateInstance<PaymentRepository<Entity>>(s,dbPath));
 
             builder.Services.AddHybridWebView();
             builder.Services.AddTransient<CustomersPage>();
