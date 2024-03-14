@@ -8,8 +8,13 @@ namespace MonerisTest.Models
 {
     public class Customer:Entity
     {
-       
-      
+
+        public Customer()
+        {
+            
+        }
+
+        public int Id { get; set; }
 
         public string? Name { get; set; }
        
@@ -42,7 +47,6 @@ namespace MonerisTest.Models
         
 
         public byte[]? CardLogo { get; set; }
-        
-
+       
     }
 }

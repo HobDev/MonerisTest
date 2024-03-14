@@ -4,7 +4,7 @@ using SQLite;
 
 namespace MonerisTest.DataAccessLayer
 {
-    public class PaymentRepository<T> where T :Entity , new()   
+    public class PaymentRepository<T> where T : Entity, new()
     {
         public SQLiteAsyncConnection? dbConnection;
 
@@ -38,11 +38,11 @@ namespace MonerisTest.DataAccessLayer
                 dbConnection = new SQLiteAsyncConnection(dbPath,Flags);
 
                 await dbConnection.CreateTableAsync<Customer>();
-                await dbConnection.CreateTableAsync<CardHolderTransactionRecordPurchase>();
-                await dbConnection.CreateTableAsync<CardHolderTransactionRecordConvenienceFee>();
-                await dbConnection.CreateTableAsync<CardHolderTransactionRecordRefund>();   
-                await dbConnection.CreateTableAsync<CardholderReceipt>();
-                await dbConnection.CreateTableAsync<MerchantCopyReceipt>();
+                //await dbConnection.CreateTableAsync<CardHolderTransactionRecordPurchase>();
+                //await dbConnection.CreateTableAsync<CardHolderTransactionRecordConvenienceFee>();
+                //await dbConnection.CreateTableAsync<CardHolderTransactionRecordRefund>();   
+                //await dbConnection.CreateTableAsync<CardholderReceipt>();
+                //await dbConnection.CreateTableAsync<MerchantCopyReceipt>();
               
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace MonerisTest.DataAccessLayer
             }
         }
 
-        public async Task<List<T>?> GetAll()
+        public async Task<List<T>> GetAll()
         {
             try
             {
@@ -67,7 +67,7 @@ namespace MonerisTest.DataAccessLayer
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return [];
             }
-            return null;
+            return new List<T>();
         }
 
         public async Task<T?> Get(int id)
@@ -85,7 +85,7 @@ namespace MonerisTest.DataAccessLayer
                 await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
                 return new T();
             }
-            return null;
+            return default(T);
         }
 
         public async Task<int> Save(T entity)
