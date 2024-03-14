@@ -11,7 +11,6 @@ namespace MonerisTest.ViewModels
         [ObservableProperty]
         List<Customer>? customers;
 
-
       
         public CustomersViewModel()
         {
@@ -68,6 +67,22 @@ namespace MonerisTest.ViewModels
             catch (Exception ex)
             {
                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
+
+       
+
+        [RelayCommand]
+        private async Task CustomerSelected(Customer customer)
+        {
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(BookingPage)}", new Dictionary<string, object> { { "customerId", customer.CustomerId} });
+            }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
         }
     }

@@ -1,8 +1,9 @@
 ﻿
 
+
 namespace MonerisTest
 {
-    public partial class BookingViewModel: ObservableObject
+    public partial class BookingViewModel: ObservableObject, IQueryAttributable
     {
 
         [ObservableProperty]
@@ -64,10 +65,18 @@ namespace MonerisTest
            
         }
 
-      
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            // This method is called when the page is navigated to with a query string.
+            // The query string is parsed into a dictionary and passed to this method.
+             if (query.ContainsKey("customerId"))
+            {
+                if (query["customerId"] is string customerId)
+                {
+                    // Do something with the customerId
 
-        
-
-
+                }
+            }
+        }
     }
 }

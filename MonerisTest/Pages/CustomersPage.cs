@@ -3,7 +3,7 @@ namespace MonerisTest.Pages;
 public class CustomersPage : ContentPage
 {
 
-    CustomersViewModel viewModel;
+    CustomersViewModel? viewModel;
 	public CustomersPage(CustomersViewModel viewModel)
 	{
 		try
@@ -11,16 +11,25 @@ public class CustomersPage : ContentPage
             this.viewModel = viewModel;
             Content = new VerticalStackLayout
             {
-                Children = 
+                Margin = new Thickness(20),
+                Children =
                 {
                    new CollectionView
                    {
-                       ItemTemplate= new DataTemplate(()=> new Label
+                       ItemsLayout= new LinearItemsLayout(ItemsLayoutOrientation.Vertical)
                        {
-                          TextColor=Colors.Black ,
-                       }.Bind(Label.TextProperty, nameof(Customer.Name))),
+                           ItemSpacing=10
+                       },
+                      
+                       ItemTemplate= new DataTemplate(()=> new Button
+                       {
+                           TextColor=Colors.Black ,
+                           BackgroundColor=Colors.LightGray,
+                           FontSize=20,
+                       }.Bind(Button.TextProperty, nameof(Customer.Name)).BindCommand(nameof(viewModel.CustomerSelectedCommand), source:viewModel)),
 
-                   }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.Customers))
+
+                   }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.Customers)),   
                 }
             
             };
