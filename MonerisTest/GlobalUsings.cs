@@ -12,4 +12,5 @@ global using Moneris;
 global using MonerisTest.Models;
 global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using MonerisTest.DataAccessLayer;
-global using SQLite;
+global using Microsoft.EntityFrameworkCore;
+global using System.ComponentModel.DataAnnotations;

@@ -1,20 +1,13 @@
 ﻿
 
-using SQLite;
-using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace MonerisTest.Models
 {
-    public class Customer:Entity
+    public class Customer
     {
 
-        public Customer()
-        {
-            
-        }
 
-        public int Id { get; set; }
+        public string CustomerId { get; set; } = Guid.NewGuid().ToString();
 
         public string? Name { get; set; }
        

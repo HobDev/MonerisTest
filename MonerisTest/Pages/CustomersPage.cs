@@ -2,19 +2,32 @@ namespace MonerisTest.Pages;
 
 public class CustomersPage : ContentPage
 {
+
+    CustomersViewModel viewModel;
 	public CustomersPage(CustomersViewModel viewModel)
 	{
 		try
 		{
+            this.viewModel = viewModel;
             Content = new VerticalStackLayout
             {
-                Children = {
-                new Label { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center, Text = "Welcome to .NET MAUI!"
+                Children = 
+                {
+                   new CollectionView
+                   {
+                       ItemTemplate= new DataTemplate(()=> new Label
+                       {
+                          TextColor=Colors.Black ,
+                       }.Bind(Label.TextProperty, nameof(Customer.Name))),
+
+                   }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.Customers))
                 }
-            }
+            
             };
 
 			BindingContext = viewModel;
+
+            Loaded += CustomersPage_Loaded;
         }
 		catch (Exception ex)
 		{
@@ -23,4 +36,9 @@ public class CustomersPage : ContentPage
 		}
 		
 	}
+
+    private async void CustomersPage_Loaded(object? sender, EventArgs e)
+    {
+       await viewModel.Init();  
+    }
 }

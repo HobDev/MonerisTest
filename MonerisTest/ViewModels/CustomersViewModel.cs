@@ -1,5 +1,7 @@
 ﻿
 
+
+
 using System.Collections.ObjectModel;
 
 namespace MonerisTest.ViewModels
@@ -7,15 +9,18 @@ namespace MonerisTest.ViewModels
     public partial class CustomersViewModel : ObservableObject
     {
         [ObservableProperty]
-        List<Entity> customers;
+        List<Customer>? customers;
 
+
+      
         public CustomersViewModel()
         {
 
             try
             {
-
-                Task.Run(Init);
+                
+               
+             
             }
 
             catch (Exception ex)
@@ -25,34 +30,44 @@ namespace MonerisTest.ViewModels
 
         }
 
-        async Task  Init()
+       public  async Task  Init()
         {
             try
             {
-                customers= App.PaymentRepo.GetAll().Result;
+                using PaymentContext paymentContext = new PaymentContext();
+                Customers=paymentContext.Customers.ToList();
+             
+              
 
-                if(customers.Count==0)
+                if (Customers?.Count==0)
                 {
                     // Add two customers
-                    customers.Add(
-                        new Customer
-                        {
-                            Name = "John Doe",
-                            Email = ""
 
-
-                        });
-                    customers.Add(new Customer
+                    Customer customer1 = new Customer
                     {
-                        Name = "Jane Doe",
-                        Email = ""
 
-                    });
+                        Name = "Paramjit",
+                        Email = "paramjit@someexample.com"
+                    };
+
+                    Customer customer2 = new Customer
+                    {
+                        Name = "Nithin",
+                        Email = "nithin@daflo.com"
+                    };
+
+                var firstCustomer=   paymentContext.Customers.Add(customer1);
+                 var secondCustomer=   paymentContext.Customers.Add(customer2);
+
+                   await paymentContext.SaveChangesAsync(); 
+            
                 }
+
+             
             }
             catch (Exception ex)
             {
-                Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+               await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
         }
     }
