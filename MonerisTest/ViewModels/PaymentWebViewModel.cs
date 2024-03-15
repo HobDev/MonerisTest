@@ -86,6 +86,7 @@ namespace MonerisTest.ViewModels
                    
                 }
             }
+
         }
 
         private async Task VerifyCard()

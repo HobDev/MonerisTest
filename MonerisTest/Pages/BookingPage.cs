@@ -18,7 +18,7 @@ public class BookingPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
-                    new Label{ TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,20),
+                    new Label{FontAttributes=FontAttributes.Bold, TextDecorations= TextDecorations.Underline, TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,40),
                     new Label{Text="Saved Cards"},
                     new CollectionView
                     {

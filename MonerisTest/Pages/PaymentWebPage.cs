@@ -8,7 +8,7 @@ public class PaymentWebPage : ContentPage
     {
         try
         {
-            Title = viewModel.CustomerName;
+          
             HybridWebView.HybridWebView hybridWebView = new()
             {
                 HybridAssetRoot = "hybrid_root",
@@ -25,7 +25,7 @@ public class PaymentWebPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
-                 new Label{ TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,20),
+                 new Label{FontAttributes=FontAttributes.Bold,TextDecorations= TextDecorations.Underline, TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,40),
 
                 hybridWebView,
 
