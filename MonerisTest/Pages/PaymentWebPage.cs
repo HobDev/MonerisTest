@@ -25,6 +25,8 @@ public class PaymentWebPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
+                 new Label{ TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,20),
+
                 hybridWebView,
 
                 new HorizontalStackLayout

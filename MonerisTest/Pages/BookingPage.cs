@@ -10,7 +10,7 @@ public class BookingPage : ContentPage
     {
         try
         {
-            Title=viewModel.CustomerName;
+           
             Content = new VerticalStackLayout
             {
                 Spacing = 20,
@@ -18,6 +18,7 @@ public class BookingPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
+                    new Label{ TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,20),
                     new Label{Text="Saved Cards"},
                     new CollectionView
                     {

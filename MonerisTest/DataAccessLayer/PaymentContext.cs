@@ -7,6 +7,7 @@ namespace MonerisTest.DataAccessLayer
     public class PaymentContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<PaymentCard> PaymentCards { get; set; }
 
         public PaymentContext()
         {

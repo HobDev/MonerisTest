@@ -6,7 +6,7 @@ using Moneris;
 
 namespace MonerisTest.ViewModels
 {
-   public partial class PaymentWebViewModel: ObservableObject
+   public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable
     {
         [ObservableProperty]
         Customer? purchaser;
@@ -46,7 +46,7 @@ namespace MonerisTest.ViewModels
 
                 this.paymentContext = paymentContext;
 
-                CustomerName = Purchaser?.Name;
+              
 
                 saveCard = false;
 
@@ -82,6 +82,8 @@ namespace MonerisTest.ViewModels
                 if (query["customerId"] is string customerId)
                 {
                     Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+                    CustomerName = Purchaser?.Name;
+                   
                 }
             }
         }

@@ -39,7 +39,7 @@ namespace MonerisTest
                 this.purchaseService = purchaseService;
                 this.convenienceFeeService = convenienceFeeService;
 
-                CustomerName = Purchaser?.Name;
+               
                
 
                 TotalAmount = 1;
@@ -144,7 +144,8 @@ namespace MonerisTest
             {
                 if (query["customerId"] is string customerId)
                 {
-                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId); 
+                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+                    CustomerName = Purchaser?.Name;
                     PaymentCards = Purchaser?.SavedPaymentCards;
                 }
             }

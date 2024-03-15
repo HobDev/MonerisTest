@@ -14,6 +14,7 @@ public class CustomersPage : ContentPage
                 Margin = new Thickness(20),
                 Children =
                 {
+                   new Label{Text="Customers", TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Margins(0,0,0,20),
                    new CollectionView
                    {
                        ItemsLayout= new LinearItemsLayout(ItemsLayoutOrientation.Vertical)

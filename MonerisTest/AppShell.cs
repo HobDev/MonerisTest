@@ -13,6 +13,8 @@ namespace MonerisTest
             Routing.RegisterRoute(nameof(CustomersPage), typeof(CustomersPage));
             Routing.RegisterRoute(nameof(PaymentWebPage), typeof(PaymentWebPage));
 
+         Shell.SetNavBarIsVisible(this, false);
+
             Items.Add( new TabBar
             {
                 Items =
