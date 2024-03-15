@@ -21,25 +21,8 @@ namespace MonerisTest.Models
         public string? Address { get; set; }
        
 
-        public string? MaskedCardNumber { get; set; }
-       
-
-        public string? CardToken { get; set; }
-        
-
-        public string? CardExpiryDate { get; set; }
-       
-
-        public string? CardType { get; set; }
-       
-
-        public string? CardHolderName { get; set; }
-       
-
-        public string?  CardBankName { get; set; }
-        
-
-        public byte[]? CardLogo { get; set; }
+        // the PaymentCards property is a collection of PaymentCard and have a one-to-many parent-child relationship between Customer and PaymentCard
+        public List<PaymentCard>? SavedPaymentCards { get; set; }    = new List<PaymentCard>();
        
     }
 }

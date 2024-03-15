@@ -5,6 +5,14 @@ namespace MonerisTest
 {
     public partial class BookingViewModel: ObservableObject, IQueryAttributable
     {
+        [ObservableProperty]
+        Customer? purchaser;
+
+        [ObservableProperty]
+        List<PaymentCard>? paymentCards;
+
+        [ObservableProperty]
+        string? customerName;
 
         [ObservableProperty]
         decimal totalAmount;
@@ -15,28 +23,24 @@ namespace MonerisTest
         [ObservableProperty]
         string? maskedCardNumber;
 
-        public BookingViewModel()
+        private readonly PaymentContext? paymentContext;
+        private readonly IPurchaseService? purchaseService;
+        private readonly IConvenienceFeeService? convenienceFeeService;
+
+        public BookingViewModel(PaymentContext  paymentContext, IPurchaseService purchaseService, IConvenienceFeeService convenienceFeeService)
         {
             try
             {
-                Customer customer = new()
-                {
-                    Name = "John Doe",
-                    Email = "johndoe@example.com",
-                    PhoneNumber = "+12345",
-                    Address = "Whitby, Canada",
-                    MaskedCardNumber = "**** **** **** 4242",
-                    CardToken = "something",
-                    CardExpiryDate = "1224",
-                    CardType = "Visa Debit",
-                    CardHolderName = "John Doe",
-                    CardBankName = "Bank of Montreal"
+                this.paymentContext = paymentContext;
+                this.purchaseService = purchaseService;
+                this.convenienceFeeService = convenienceFeeService;
 
-                };
+                CustomerName = Purchaser?.Name;
+               
 
                 TotalAmount = 1;
-                CardType = customer.CardType;
-                MaskedCardNumber = customer.MaskedCardNumber;
+                CardType = Purchaser?.CardType;
+                MaskedCardNumber = Purchaser?.MaskedCardNumber;
 
 
             }
@@ -51,11 +55,22 @@ namespace MonerisTest
 
 
         [RelayCommand]
-        private static async Task Purchase()
+        private  async Task Purchase()
         {
             try
             {
-                await Shell.Current.GoToAsync("PaymentWebPage");
+                string? token = Purchaser?.CardToken;   
+                if(token==null)
+                {
+                    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", new Dictionary<string, object> { { "customerId", Purchaser.CustomerId } });
+                }
+                else
+                {
+                    // Make a payment using the permanent token
+                    await purchaseService.Purchase(token);
+                    await convenienceFeeService.ChargeConvenienceFee(TotalAmount);    
+                }
+               
             }
             catch (Exception ex)
             {
@@ -73,7 +88,8 @@ namespace MonerisTest
             {
                 if (query["customerId"] is string customerId)
                 {
-                   
+                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId); 
+                    PaymentCards = Purchaser?.SavedPaymentCards;
                 }
             }
         }

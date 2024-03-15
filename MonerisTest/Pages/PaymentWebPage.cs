@@ -8,6 +8,7 @@ public class PaymentWebPage : ContentPage
     {
         try
         {
+            Title = viewModel.CustomerName;
             HybridWebView.HybridWebView hybridWebView = new()
             {
                 HybridAssetRoot = "hybrid_root",

@@ -2,13 +2,24 @@
 
 
 
+using Moneris;
+
 namespace MonerisTest.ViewModels
 {
    public partial class PaymentWebViewModel: ObservableObject
     {
         [ObservableProperty]
+        Customer? purchaser;
+
+        [ObservableProperty]
+        string? customerName;
+
+        [ObservableProperty]
         bool saveCard;
-   
+
+        [ObservableProperty]
+        decimal totalAmount;
+
         string? tempToken;
      
         string? permanentToken;
@@ -18,16 +29,24 @@ namespace MonerisTest.ViewModels
         private readonly ICardVerificationService? cardVerificationService;
         private readonly IPurchaseService? purchaseService;
         private readonly IAddTokenService? addTokenService;
+        private readonly IConvenienceFeeService? convenienceFeeService;
+
+        private readonly PaymentContext? paymentContext;    
         
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, PaymentContext paymentContext, IConvenienceFeeService convenienceFeeService)
         {
             try
             {
                 this.cardVerificationService = cardVerificationService;
                 this.purchaseService = purchaseService;
                 this.addTokenService = addTokenService;
+                this.convenienceFeeService = convenienceFeeService;
 
+
+                this.paymentContext = paymentContext;
+
+                CustomerName = Purchaser?.Name;
 
                 saveCard = false;
 
@@ -52,6 +71,19 @@ namespace MonerisTest.ViewModels
                Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
            
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            // This method is called when the page is navigated to with a query string.
+            // The query string is parsed into a dictionary and passed to this method.
+            if (query.ContainsKey("customerId"))
+            {
+                if (query["customerId"] is string customerId)
+                {
+                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+                }
+            }
         }
 
         private async Task VerifyCard()
@@ -96,6 +128,7 @@ namespace MonerisTest.ViewModels
                     throw new Exception("Purchase Service is not available");
                 }
                 await purchaseService.Purchase(token);
+                await convenienceFeeService?.ChargeConvenienceFee(1);
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@ public class BookingPage : ContentPage
     {
         try
         {
+            Title=viewModel.CustomerName;
             Content = new VerticalStackLayout
             {
                 Spacing = 20,
@@ -17,6 +18,17 @@ public class BookingPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
+                    new Label{Text="Saved Cards"},
+                    new CollectionView
+                    {
+                        ItemTemplate = new DataTemplate(() =>
+                        {
+                            Label label = new Label();
+                            label.SetBinding(Label.TextProperty, "MaskedCardNumber");
+                            return label;
+                        }),
+                      
+                    }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.PaymentCards)),
                 new Label{FontSize=20,TextColor=Colors.Black, FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.TotalAmount), stringFormat:"Amount Payable ${0}"),
                 new Label{FontSize=15,TextColor=Colors.Black,  FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CardType)),
                 new Label{FontSize=15,TextColor=Colors.Black,  FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.MaskedCardNumber)),

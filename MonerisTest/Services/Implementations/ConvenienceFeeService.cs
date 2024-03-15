@@ -6,9 +6,9 @@ namespace MonerisTest.Services.Implementations
     {
 
 
-       public async Task ConvenienceFee(decimal amount)
+       public async Task ChargeConvenienceFee(decimal amount)
         {
-            throw new NotImplementedException();
+            
         }   
     }
 }

@@ -12,7 +12,8 @@ namespace MonerisTest.ViewModels
         List<Customer>? customers;
 
 
-        private readonly PaymentContext paymentContext;
+        private readonly PaymentContext? paymentContext;
+      
         public CustomersViewModel(PaymentContext paymentContext)
         {
 
@@ -20,7 +21,7 @@ namespace MonerisTest.ViewModels
             {
                 
                this.paymentContext = paymentContext;
-             
+               
              
             }
 
@@ -35,10 +36,7 @@ namespace MonerisTest.ViewModels
         {
             try
             {
-               
-                Customers=paymentContext.Customers.ToList();
-             
-              
+                Customers = paymentContext?.Customers.ToList();
 
                 if (Customers?.Count==0)
                 {
@@ -48,20 +46,27 @@ namespace MonerisTest.ViewModels
                     {
 
                         Name = "Paramjit",
-                        Email = "paramjit@someexample.com"
+                        Email = "paramjit@someexample.com",
+                        PhoneNumber = "+12345",
+                        Address = "Whitby, Canada",
                     };
 
                     Customer customer2 = new Customer
                     {
                         Name = "Nithin",
-                        Email = "nithin@daflo.com"
+                        Email = "nithin@daflo.com",
+                        PhoneNumber = "+12345",
+                        Address = "Whitby, Canada",
                     };
 
-                var firstCustomer=   paymentContext.Customers.Add(customer1);
-                 var secondCustomer=   paymentContext.Customers.Add(customer2);
+                var firstCustomer=   paymentContext?.Customers.Add(customer1);
+                 var secondCustomer=   paymentContext?.Customers.Add(customer2);
 
-                   await paymentContext.SaveChangesAsync(); 
-            
+                   await paymentContext.SaveChangesAsync();
+
+
+                    Customers = paymentContext.Customers.ToList();
+
                 }
 
              
