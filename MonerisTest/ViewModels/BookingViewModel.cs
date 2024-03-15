@@ -73,8 +73,7 @@ namespace MonerisTest
             {
                 if (query["customerId"] is string customerId)
                 {
-                    // Do something with the customerId
-
+                   
                 }
             }
         }

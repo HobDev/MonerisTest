@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.Extensions.Options;
+
 namespace MonerisTest
 {
     public static class MauiProgram
@@ -16,7 +18,9 @@ namespace MonerisTest
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-          
+
+            builder.Services.AddDbContext<PaymentContext>();
+
            
 
             builder.Services.AddHybridWebView();

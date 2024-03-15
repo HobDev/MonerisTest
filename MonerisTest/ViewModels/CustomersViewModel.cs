@@ -11,14 +11,16 @@ namespace MonerisTest.ViewModels
         [ObservableProperty]
         List<Customer>? customers;
 
-      
-        public CustomersViewModel()
+
+        private readonly PaymentContext paymentContext;
+        public CustomersViewModel(PaymentContext paymentContext)
         {
 
             try
             {
                 
-               
+               this.paymentContext = paymentContext;
+             
              
             }
 
@@ -33,7 +35,7 @@ namespace MonerisTest.ViewModels
         {
             try
             {
-                using PaymentContext paymentContext = new PaymentContext();
+               
                 Customers=paymentContext.Customers.ToList();
              
               
