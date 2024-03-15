@@ -6,32 +6,41 @@ namespace MonerisTest.Services.Implementations
 {
     public class PurchaseService : IPurchaseService
     {
-        //transaction object properties
-        String store_id = AppConstants.STORE_ID;
-        String api_token = AppConstants.API_TOKEN;  
-
-
-      
-
-        public async Task Purchase(string token)
+       
+        public async Task<Receipt?> Purchase(PurchaseData purchaseData)
         {
-            string order_id = "Test" + DateTime.Now.ToString("yyyyMMddhhmmss");
-            string amount = "1.00";
-            string convenience_fee = "1.00";    
-            string cust_id = "customer1"; //if sent will be submitted, otherwise cust_id from profile will be used
+            if(purchaseData==null)
+            {
+                throw new ArgumentNullException(nameof(purchaseData));
+            }
+            //transaction object properties
+            String store_id = purchaseData.Store_Id;
+            String api_token = purchaseData.Api_Token;
+
+
+            string order_id = purchaseData.Order_Id;
+            string amount = purchaseData.Amount;  
+            string? cust_id = null;  
+            if(purchaseData.Cust_Id!=null)
+            {
+                //if sent will be submitted, otherwise cust_id from profile will be used
+                cust_id = purchaseData.Cust_Id;
+            }   
+            string token = purchaseData.Token;
+           
             string crypt_type = "1";
             string descriptor = "my descriptor";
             bool status_check = false;
             String processing_country_code = "CA";
 
 
-            ConvFeeInfo convFeeInfo = new ConvFeeInfo();
-            convFeeInfo.SetConvenienceFee(convenience_fee);
-
             ResPurchaseCC resPurchaseCC = new ResPurchaseCC();
             resPurchaseCC.SetDataKey(token);
             resPurchaseCC.SetOrderId(order_id);
-            resPurchaseCC.SetCustId(cust_id);
+            if(purchaseData.Cust_Id!=null)
+            {
+                resPurchaseCC.SetCustId(cust_id);
+            }
             resPurchaseCC.SetAmount(amount);
             resPurchaseCC.SetCryptType(crypt_type);
             resPurchaseCC.SetDynamicDescriptor(descriptor);
@@ -50,48 +59,16 @@ namespace MonerisTest.Services.Implementations
             try
             {
                 Receipt receipt = mpgReq.GetReceipt();
-
-                string dataKey =  receipt.GetDataKey();
-                string receiptId =  receipt.GetReceiptId();
-                string referenceNum = receipt.GetReferenceNum();
-                string responseCode =  receipt.GetResponseCode();
-                string authCode =  receipt.GetAuthCode();
-                string message =  receipt.GetMessage();
-                string transDate =  receipt.GetTransDate();
-                string transTime = receipt.GetTransTime();
-                string transType = receipt.GetTransType();
-                string Complete = receipt.GetComplete();
-                string transAmount = receipt.GetTransAmount();
-                string cardType = receipt.GetCardType();
-                string txnNumber = receipt.GetTxnNumber();
-                string timedOut = receipt.GetTimedOut();
-                string resSuccess =  receipt.GetResSuccess();
-                string paymentType = receipt.GetPaymentType();
-                string isVisaDebit =  receipt.GetIsVisaDebit();
-                string issuerId =  receipt.GetIssuerId();
-
-                string cust_ID =  receipt.GetResDataCustId();
-                string phone =  receipt.GetResDataPhone();
-                string email = receipt.GetResDataEmail();
-                string note =  receipt.GetResDataNote();
-                string masked_Pan =  receipt.GetResDataMaskedPan();
-                string exp_Date =  receipt.GetResDataExpdate();
-                string crypt_Type =  receipt.GetResDataCryptType();
-                string avs_Street_Number =  receipt.GetResDataAvsStreetNumber();
-                string avs_Street_Name =  receipt.GetResDataAvsStreetName();
-                string avs_Zipcode = receipt.GetResDataAvsZipcode();
-
-
-                CardHolderTransactionRecordPurchase cardHolderTransactionRecordPurchase = new CardHolderTransactionRecordPurchase()
-                {
-
-                };
+                return receipt;
               
             }
+          
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+
+            return null;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace MonerisTest.Models
 {
     public class PaymentCard
     {
-        public string? CardToken { get; set; }
+        public string? PermanentToken { get; set; }
         public string? MaskedCardNumber { get; set; }
         public string? CardExpiryDate { get; set; }
         public string? CardType { get; set; }
