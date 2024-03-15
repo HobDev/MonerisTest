@@ -11,7 +11,7 @@ namespace MonerisTest.Services.Implementations
         
       
 
-        public Task<string?> SaveTokenToVault(string issuerId, string tempToken)
+        public async Task<Receipt?> SaveTokenToVault(string issuerId, string tempToken)
         {
 
             string crypt_type = "7";
@@ -35,27 +35,9 @@ namespace MonerisTest.Services.Implementations
             try
             {
                 Receipt receipt = mpgReq.GetReceipt();
-                string dataKey =  receipt.GetDataKey();
-                string  responseCode  = receipt.GetResponseCode();
-                string message =  receipt.GetMessage();
-                string transDate =  receipt.GetTransDate();
-                string transTime =  receipt.GetTransTime();
-                string complete =  receipt.GetComplete();
-                string timedOut =  receipt.GetTimedOut();
-                string resSuccess =  receipt.GetResSuccess();
-                string paymentType =  receipt.GetPaymentType();
-                string cust_ID =  receipt.GetResDataCustId();
-                string phone = receipt.GetResDataPhone();
-                string email = receipt.GetResDataEmail();
-                string note = receipt.GetResDataNote();
-                string maskedPan =  receipt.GetResDataMaskedPan();
-                string exp_Date = receipt.GetResDataExpdate();
-                string crypt_Type =  receipt.GetResDataCryptType();
-                string avs_Street_Number =  receipt.GetResDataAvsStreetNumber();
-                string avs_Street_Name =  receipt.GetResDataAvsStreetName();
-                string avs_Zipcode =  receipt.GetResDataAvsZipcode();
+               
 
-                return Task.FromResult(dataKey);
+                return receipt;
             }
             catch (Exception e)
             {

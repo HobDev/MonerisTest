@@ -82,7 +82,7 @@ namespace MonerisTest
                             amount : TotalAmount.ToString(),
                             cust_Id :null
                         );
-                      Receipt? receipt=  await purchaseService.Purchase(purchaseData);
+                        Receipt? receipt=  await purchaseService.Purchase(purchaseData);
                         await SavePurchaseData(receipt);
                         await convenienceFeeService.ChargeConvenienceFee(TotalAmount);
                     }
