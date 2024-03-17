@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
 namespace MonerisTest.ViewModels
 {
    public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable
@@ -183,6 +185,14 @@ namespace MonerisTest.ViewModels
             string? avs_Street_Number = receipt.GetResDataAvsStreetNumber();
             string? avs_Street_Name = receipt.GetResDataAvsStreetName();
             string? avs_Zipcode = receipt.GetResDataAvsZipcode();
+
+
+            //CardHolderTransactionRecordPurchase cardHolderTransactionRecordPurchase = new CardHolderTransactionRecordPurchase
+            //{
+
+            //     Amount= ,
+            //};
+           
         }
 
         async Task GetPermanentToken(string issuerId)
@@ -196,6 +206,7 @@ namespace MonerisTest.ViewModels
                         throw new Exception("Add Token Service is not available");
                     }
                      Receipt? receipt= await addTokenService.SaveTokenToVault(issuerId, tempToken);
+                    permanentToken = receipt?.GetDataKey();
                     if (permanentToken != null)
                     {
                         await AddPermanentToken(receipt);
@@ -250,6 +261,8 @@ namespace MonerisTest.ViewModels
                
             };
 
+             purchaser.SavedPaymentCards.Add(paymentCard);
+            await paymentContext.SaveChangesAsync();
         }
     }
 }

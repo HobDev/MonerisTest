@@ -143,6 +143,7 @@ namespace MonerisTest
                     Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
                     PaymentCards = Purchaser?.SavedPaymentCards;
+                  
                 }
             }
         }

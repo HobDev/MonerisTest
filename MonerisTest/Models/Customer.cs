@@ -22,7 +22,7 @@ namespace MonerisTest.Models
        
 
         // the PaymentCards property is a collection of PaymentCard and have a one-to-many parent-child relationship between Customer and PaymentCard
-        public List<PaymentCard>? SavedPaymentCards { get; set; }    = new List<PaymentCard>();
+        public List<PaymentCard>? SavedPaymentCards { get; }    = new ();
        
     }
 }

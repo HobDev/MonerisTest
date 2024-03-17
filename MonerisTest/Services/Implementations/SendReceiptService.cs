@@ -5,7 +5,9 @@ namespace MonerisTest.Services.Implementations
 {
     public class SendReceiptService : ISendReceiptService
     {
-        public async Task SendReceiptToCustomer(CardHolderTransactionRecordPurchase cardHolderTransactionRecord)
+
+       
+        public async Task SendReceipt(CardHolderTransactionRecordPurchase cardHolderTransactionRecord)
         {
 
             PaymentReceipt cardHolderReceipt = new()
@@ -14,12 +16,6 @@ namespace MonerisTest.Services.Implementations
             };
         }
 
-        public async Task SendReceiptToMerchant(CardHolderTransactionRecordPurchase cardHolderTransactionRecord)
-        {
-            PaymentReceipt cardHolderReceipt = new()
-            {
-
-            };
-        }
+       
     }
 }

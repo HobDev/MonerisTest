@@ -11,6 +11,6 @@ namespace MonerisTest.Models
 
         // the CustomerId and Customer properties relate back to the parent Customer object for the instance of the PaymentCard
         public int CustomerId { get; set; } 
-        public Customer? TheCustomer { get; set; }
+        public Customer TheCustomer { get; set; }
     }
 }

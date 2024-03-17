@@ -36,7 +36,7 @@ public class BookingPage : ContentPage
                                 ColumnDefinitions= Columns.Define
                                 (
                                     (CardColumns.CheckBoxColumn,10),
-                                    (CardColumns.CheckBoxColumn,Auto)
+                                    (CardColumns.CardInfoColumn,Auto)
                                 ),
 
                                 Children=
