@@ -7,7 +7,7 @@ namespace MonerisTest.Models
     {
 
 
-        public string CustomerId { get; set; } = Guid.NewGuid().ToString();
+        public int CustomerId { get; set; } 
 
         public string? Name { get; set; }
        

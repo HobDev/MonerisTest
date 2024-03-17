@@ -14,3 +14,5 @@ global using CommunityToolkit.Mvvm.Messaging.Messages;
 global using MonerisTest.DataAccessLayer;
 global using Microsoft.EntityFrameworkCore;
 global using System.ComponentModel.DataAnnotations;
+global using CommunityToolkit.Maui.Converters;
+global using static CommunityToolkit.Maui.Markup.GridRowsColumns;

@@ -1,7 +1,8 @@
 ﻿
 namespace MonerisTest.Models
 {
-    public class CardholderReceipt
+    // the payment receipt for an e-commerce transaction is same for the merchant and customer in Canada
+    public class PaymentReceipt
     {
         // legal name of the merchant
         public string? MerchantName { get; set; }

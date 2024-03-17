@@ -1,9 +1,5 @@
 ﻿
 
-
-
-using Moneris;
-
 namespace MonerisTest.ViewModels
 {
    public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable
@@ -77,9 +73,9 @@ namespace MonerisTest.ViewModels
         {
             // This method is called when the page is navigated to with a query string.
             // The query string is parsed into a dictionary and passed to this method.
-            if (query.ContainsKey("customerId"))
+            if (query.TryGetValue("customerId", out object? value))
             {
-                if (query["customerId"] is string customerId)
+                if (value is int customerId)
                 {
                     Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
@@ -242,6 +238,17 @@ namespace MonerisTest.ViewModels
             string avs_Street_Name = receipt.GetResDataAvsStreetName();
             string avs_Zipcode = receipt.GetResDataAvsZipcode();
 
+
+            PaymentCard paymentCard = new PaymentCard
+            {
+                PermanentToken = dataKey,
+                MaskedCardNumber = maskedPan,
+                CardExpiryDate= exp_Date,
+               
+                CustomerId=Purchaser.CustomerId ,
+                TheCustomer=Purchaser
+               
+            };
 
         }
     }

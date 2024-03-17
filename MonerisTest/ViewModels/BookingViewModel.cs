@@ -39,13 +39,9 @@ namespace MonerisTest
                 this.purchaseService = purchaseService;
                 this.convenienceFeeService = convenienceFeeService;
 
-               
-               
 
                 TotalAmount = 1;
                
-
-
             }
             catch (Exception ex)
             {
@@ -140,9 +136,9 @@ namespace MonerisTest
         {
             // This method is called when the page is navigated to with a query string.
             // The query string is parsed into a dictionary and passed to this method.
-             if (query.ContainsKey("customerId"))
+             if (query.TryGetValue("customerId", out object? value))
             {
-                if (query["customerId"] is string customerId)
+                if (value is int customerId)
                 {
                     Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;

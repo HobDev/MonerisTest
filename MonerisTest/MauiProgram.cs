@@ -1,5 +1,6 @@
 ﻿
 
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Options;
 
 namespace MonerisTest
@@ -11,6 +12,7 @@ namespace MonerisTest
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMarkup()
                 .ConfigureServices()
                 .ConfigureFonts(fonts =>
