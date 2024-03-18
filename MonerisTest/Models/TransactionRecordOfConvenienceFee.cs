@@ -2,7 +2,7 @@
 
 namespace MonerisTest.Models
 {
-    public class CardHolderTransactionRecordPurchase
+    public partial class TransactionRecordOfConvenienceFee : IRealmObject
     {
 
         // legal name of the merchant
@@ -45,6 +45,10 @@ namespace MonerisTest.Models
         public string? CardHolderAddress { get; set; }
 
         // any restrictions on refunds and returns
-        public string? Restrictions { get; set; }
+        public string? Restrictions { get; set; } = "Cancellation is only allowed 24 hours before the start of the Game";
+
+
+        // backlink to the customer
+        public Customer? Customer { get; set; }
     }
 }

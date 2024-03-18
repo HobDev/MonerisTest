@@ -28,7 +28,7 @@ namespace MonerisTest.Services.Implementations
             }   
             string token = purchaseData.Token;
            
-            string crypt_type = "1";
+            string crypt_type = "7";
             string descriptor = "my descriptor";
             bool status_check = false;
             String processing_country_code = "CA";

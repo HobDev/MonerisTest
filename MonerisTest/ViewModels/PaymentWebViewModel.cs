@@ -1,5 +1,5 @@
 ﻿
-
+using System.Reflection.Metadata;
 
 namespace MonerisTest.ViewModels
 {
@@ -162,10 +162,39 @@ namespace MonerisTest.ViewModels
             }
             // Save the receipt data to the database
             string? dataKey = receipt.GetDataKey();
+            string? resSuccess = receipt.GetResSuccess();
+            string? paymentType = receipt.GetPaymentType();
+            string? cust_ID = receipt.GetResCustId();
+            string? phone = receipt.GetResPhone(); 
+            string? email = receipt.GetResEmail();
+            string? note = receipt.GetResNote();
+            string? masked_Pan = receipt.GetResMaskedPan();
+            string? exp_Date = receipt.GetResExpDate();
+            string? crypt_Type = receipt.GetResCryptType();
+            string? avs_Street_Number = receipt.GetResAvsStreetNumber();
+            string? avs_Street_Name = receipt.GetResAvsStreetName();
+            string? avs_Zipcode = receipt.GetResAvsZipcode();
+
+
+            string? data_cust_ID = receipt.GetResDataCustId();
+            string? data_phone = receipt.GetResDataPhone();
+            string? data_email = receipt.GetResDataEmail();
+            string? data_note = receipt.GetResDataNote();
+            string? data_masked_Pan = receipt.GetResDataMaskedPan();
+            string? data_exp_Date = receipt.GetResDataExpdate();
+            string? data_crypt_Type = receipt.GetResDataCryptType();
+            string? data_avs_Street_Number = receipt.GetResDataAvsStreetNumber();
+            string? data_avs_Street_Name = receipt.GetResDataAvsStreetName();
+            string? data_avs_Zipcode = receipt.GetResDataAvsZipcode();
+
+
             string? receiptId = receipt.GetReceiptId();
             string? referenceNum = receipt.GetReferenceNum();
             string? responseCode = receipt.GetResponseCode();
             string? authCode = receipt.GetAuthCode();
+            string? cardBrand = receipt.GetCardBrand();
+            string? brandName=receipt.GetCardBrandName();    
+            string? isoCode = receipt.GetISO();
             string? message = receipt.GetMessage();
             string? transDate = receipt.GetTransDate();
             string? transTime = receipt.GetTransTime();
@@ -175,28 +204,37 @@ namespace MonerisTest.ViewModels
             string? cardType = receipt.GetCardType();
             string? txnNumber = receipt.GetTxnNumber();
             string? timedOut = receipt.GetTimedOut();
-            string? resSuccess = receipt.GetResSuccess();
-            string? paymentType = receipt.GetPaymentType();
+         
             string? isVisaDebit = receipt.GetIsVisaDebit();
             string? issuerId = receipt.GetIssuerId();
-
-            string? cust_ID = receipt.GetResDataCustId();
-            string? phone = receipt.GetResDataPhone();
-            string? email = receipt.GetResDataEmail();
-            string? note = receipt.GetResDataNote();
-            string? masked_Pan = receipt.GetResDataMaskedPan();
-            string? exp_Date = receipt.GetResDataExpdate();
-            string? crypt_Type = receipt.GetResDataCryptType();
-            string? avs_Street_Number = receipt.GetResDataAvsStreetNumber();
-            string? avs_Street_Name = receipt.GetResDataAvsStreetName();
-            string? avs_Zipcode = receipt.GetResDataAvsZipcode();
+          
+          
+           
+          
 
 
-            //CardHolderTransactionRecordPurchase cardHolderTransactionRecordPurchase = new CardHolderTransactionRecordPurchase
-            //{
+            decimal amount = decimal.TryParse(transAmount, out decimal TotalAmount) ? TotalAmount : 0;
+            // convert string to datetime offset
+            DateTimeOffset transDateOffset = DateTimeOffset.TryParse(transDate, out DateTimeOffset result) ? result : DateTimeOffset.Now;
 
-            //     Amount= ,
-            //};
+            PaymentReceipt transactionReceipt = new PaymentReceipt
+            (
+               transactionType:transType,
+            orderNumber:receiptId,
+            transaction_DateTime:transDateOffset,
+        authorizationNumber:authCode,
+        referenceNumber:referenceNum,
+        iSOCode:isoCode,
+        responseCode:responseCode,
+            goods_Description:string.Empty,
+             amount:amount,
+           currency_Code:string.Empty,
+            cardHolderName:Purchaser?.Name,  
+           cardHolderAddress:string.Empty,
+             purchaser:Purchaser
+
+            );
+         
            
         }
 
