@@ -82,6 +82,13 @@ namespace MonerisTest.ViewModels
                    
                 }
             }
+            if(query.TryGetValue("amount", out object? secondValue))
+            {
+                if(secondValue is decimal amount)
+                {
+                    TotalAmount = amount;
+                }
+            }
 
         }
 
