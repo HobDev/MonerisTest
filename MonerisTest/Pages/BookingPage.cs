@@ -5,8 +5,7 @@ namespace MonerisTest.Pages;
 
 public class BookingPage : ContentPage
 {
-  
-    enum CardColumns { CheckBoxColumn, CardInfoColumn }
+ 
 
     // pay for the booking by using Hosted tokenization. If the permanent token is saved use it to make a vault payment. If the permanent token is not saved, then first create a temporary token, and if customer allows convert it to a permanent token and then make a payment using the permanent token. If customer don't allow to save the permanent token, then make a payment using the temporary token.
     // charge convenience fee on every purchase. The convenience fee is charged by the merchant for providing the convenience of booking online. The purpose of the convenience fee is to cover the cost of the payment gateway and the cost of the convenience provided to the customer. The convenience fee is charged on the total amount of the booking.The convenience fee and the booking amount will be shown separately in the bank statement of the customer.
@@ -30,19 +29,13 @@ public class BookingPage : ContentPage
                         ItemTemplate = new DataTemplate(() =>
                         {
                             
-                            return new Grid
+                            return new HorizontalStackLayout
                             {
                                 
-                                ColumnDefinitions= Columns.Define
-                                (
-                                    (CardColumns.CheckBoxColumn,10),
-                                    (CardColumns.CardInfoColumn,Auto)
-                                ),
-
                                 Children=
                                 {
-                                 new CheckBox{}.Column(CardColumns.CheckBoxColumn),
-                               new Label{}.Bind(Label.TextProperty, nameof(PaymentCard.MaskedCardNumber)).Column(CardColumns.CardInfoColumn),
+                                 new CheckBox{},
+                               new Label{TextColor= Colors.Black}.Bind(Label.TextProperty, nameof(PaymentCard.MaskedCardNumber)),
                                 }
                             };
                            

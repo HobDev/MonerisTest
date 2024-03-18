@@ -1,6 +1,8 @@
 ﻿
 
 
+using CommunityToolkit.Maui.Core.Extensions;
+
 namespace MonerisTest
 {
     public partial class BookingViewModel: ObservableObject, IQueryAttributable
@@ -13,7 +15,7 @@ namespace MonerisTest
         string? customerName;
 
         [ObservableProperty]
-        List<PaymentCard>? paymentCards;
+        ObservableCollection<PaymentCard>? paymentCards;
 
         [ObservableProperty]
         PaymentCard? selectedCard;
@@ -144,8 +146,8 @@ namespace MonerisTest
                 {
                     Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
-                    PaymentCards = Purchaser?.SavedPaymentCards.ToList();
-                  
+                    PaymentCards = Purchaser?.SavedPaymentCards.ToObservableCollection();
+                    SelectedCard = PaymentCards?.FirstOrDefault();
                 }
             }
         }

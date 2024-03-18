@@ -236,6 +236,7 @@ namespace MonerisTest.ViewModels
             string timedOut = receipt.GetTimedOut();
             string resSuccess = receipt.GetResSuccess();
             string paymentType = receipt.GetPaymentType();
+            string cardType = receipt.GetCardType();
             string cust_ID = receipt.GetResDataCustId();
             string phone = receipt.GetResDataPhone();
             string email = receipt.GetResDataEmail();
