@@ -176,17 +176,6 @@ namespace MonerisTest.ViewModels
             string? avs_Zipcode = receipt.GetResAvsZipcode();
 
 
-            string? data_cust_ID = receipt.GetResDataCustId();
-            string? data_phone = receipt.GetResDataPhone();
-            string? data_email = receipt.GetResDataEmail();
-            string? data_note = receipt.GetResDataNote();
-            string? data_masked_Pan = receipt.GetResDataMaskedPan();
-            string? data_exp_Date = receipt.GetResDataExpdate();
-            string? data_crypt_Type = receipt.GetResDataCryptType();
-            string? data_avs_Street_Number = receipt.GetResDataAvsStreetNumber();
-            string? data_avs_Street_Name = receipt.GetResDataAvsStreetName();
-            string? data_avs_Zipcode = receipt.GetResDataAvsZipcode();
-
 
             string? receiptId = receipt.GetReceiptId();
             string? referenceNum = receipt.GetReferenceNum();
@@ -204,10 +193,56 @@ namespace MonerisTest.ViewModels
             string? cardType = receipt.GetCardType();
             string? txnNumber = receipt.GetTxnNumber();
             string? timedOut = receipt.GetTimedOut();
-         
-            string? isVisaDebit = receipt.GetIsVisaDebit();
-            string? issuerId = receipt.GetIssuerId();
-          
+
+            string? CardTypeValue=string.Empty;
+          switch (cardType)
+            {
+                case "V":
+                    CardTypeValue = "Visa";
+                    break;
+                    case "M":
+                    CardTypeValue = "MasterCard";
+                    break;
+                    case "AX": 
+                    CardTypeValue = "American Express";
+                    break;
+                    case "DC":
+                    CardTypeValue = "Diners Club";
+                    break;
+                    case "NO":
+                    CardTypeValue = "Novus/Discover";
+                      break;
+                    case "SE":
+                    CardTypeValue = "Sears";
+                    break;
+                    case "D":
+                    CardTypeValue = "Debit";
+                    break;
+                    case "C1":
+                    CardTypeValue = "JCB";
+                    break;
+            }
+
+            string? transTypeValue = string.Empty;  
+
+            switch(transType)
+            {
+                case "0":
+                    transTypeValue = "Purchase";
+                    break; 
+                    case "1":
+                    transTypeValue = "Pre-Authorization";
+                    break;
+                    case "2":
+                    transTypeValue = "Completion";
+                    break;
+                    case "4":
+                    transTypeValue = "Refund";
+                    break;
+                    case "11":
+                    transTypeValue = "Void";
+                    break;
+            }
           
            
           
@@ -231,8 +266,11 @@ namespace MonerisTest.ViewModels
            currency_Code:string.Empty,
             cardHolderName:Purchaser?.Name,  
            cardHolderAddress:string.Empty,
-             purchaser:Purchaser
+             purchaser:Purchaser,
 
+             // not part of the receipt
+             transactionNumber:txnNumber,
+             cardType:CardTypeValue
             );
          
            
@@ -303,7 +341,6 @@ namespace MonerisTest.ViewModels
             };
             realm.Write(() =>
             {
-
                 purchaser.SavedPaymentCards.Add(paymentCard);
             });
              

@@ -8,7 +8,7 @@ namespace MonerisTest.Models
         {
         }
 
-        public PaymentReceipt(string transactionType, string orderNumber, DateTimeOffset transaction_DateTime, string authorizationNumber, string referenceNumber, string iSOCode, string responseCode, string goods_Description, decimal amount, string currency_Code, string cardHolderName, string cardHolderAddress, Customer purchaser)
+        public PaymentReceipt(string transactionType, string orderNumber, DateTimeOffset transaction_DateTime, string authorizationNumber, string referenceNumber, string iSOCode, string responseCode, string goods_Description, decimal amount, string currency_Code, string cardHolderName, string cardHolderAddress, Customer purchaser, string transactionNumber, string cardType)
         {
             TransactionType = transactionType;
             OrderNumber = orderNumber;
@@ -23,6 +23,8 @@ namespace MonerisTest.Models
             CardHolderName = cardHolderName;
             CardHolderAddress = cardHolderAddress;
             Purchaser = purchaser;
+            TransactionNumber = transactionNumber;
+            CardType = cardType;
         }
 
         [PrimaryKey]
@@ -73,6 +75,14 @@ namespace MonerisTest.Models
 
         // backlink to the customer
         public Customer? Purchaser { get; set; }
+
+
+        // not part of the receipt but useful for the merchant
+        public string TransactionNumber { get; set; }
+
+        public string CardType { get; set; }
+
+        public string TransactionTypeValue { get; set; }
 
 
     }
