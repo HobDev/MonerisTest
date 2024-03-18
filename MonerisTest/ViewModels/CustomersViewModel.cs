@@ -2,7 +2,7 @@
 
 
 
-using System.Collections.ObjectModel;
+
 
 namespace MonerisTest.ViewModels
 {
@@ -12,17 +12,17 @@ namespace MonerisTest.ViewModels
         List<Customer>? customers;
 
 
-        private readonly PaymentContext? paymentContext;
+        Realm realm;
       
-        public CustomersViewModel(PaymentContext paymentContext)
+        public CustomersViewModel()
         {
 
             try
             {
-                
-               this.paymentContext = paymentContext;
-               
-             
+
+               realm = Realm.GetInstance();
+
+
             }
 
             catch (Exception ex)
@@ -36,7 +36,8 @@ namespace MonerisTest.ViewModels
         {
             try
             {
-                Customers = paymentContext?.Customers.ToList();
+               
+                Customers = realm?.All<Customer>().ToList();
 
                 if (Customers?.Count==0)
                 {
@@ -59,14 +60,14 @@ namespace MonerisTest.ViewModels
                         Address = "Whitby, Canada",
                     };
 
-                var firstCustomer=   paymentContext?.Customers.Add(customer1);
-                 var secondCustomer=   paymentContext?.Customers.Add(customer2);
+                    realm?.Write(() =>
+                    {
+                        realm.Add(customer1);
+                        realm.Add(customer2);
+                    });
 
-                   await paymentContext.SaveChangesAsync();
 
-
-                    Customers = paymentContext.Customers.ToList();
-
+                    Customers = realm?.All<Customer>().ToList();
                 }
 
              

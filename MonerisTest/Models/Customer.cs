@@ -1,9 +1,11 @@
 ﻿
 
 
+using Realms;
+
 namespace MonerisTest.Models
 {
-    public class Customer
+    public partial class Customer : IRealmObject
     {
 
 
@@ -22,7 +24,7 @@ namespace MonerisTest.Models
        
 
         // the PaymentCards property is a collection of PaymentCard and have a one-to-many parent-child relationship between Customer and PaymentCard
-        public List<PaymentCard>? SavedPaymentCards { get; }    = new ();
+        public IList<PaymentCard> SavedPaymentCards { get;}
        
     }
 }

@@ -27,18 +27,20 @@ namespace MonerisTest
         [ObservableProperty]
         string? maskedCardNumber;
 
-        private readonly PaymentContext? paymentContext;
+        Realm realm;
+
+     
         private readonly IPurchaseService? purchaseService;
         private readonly IConvenienceFeeService? convenienceFeeService;
 
-        public BookingViewModel(PaymentContext  paymentContext, IPurchaseService purchaseService, IConvenienceFeeService convenienceFeeService)
+        public BookingViewModel( IPurchaseService purchaseService, IConvenienceFeeService convenienceFeeService)
         {
             try
             {
-                this.paymentContext = paymentContext;
+               
                 this.purchaseService = purchaseService;
                 this.convenienceFeeService = convenienceFeeService;
-
+                realm= Realm.GetInstance(); 
 
                 TotalAmount = 1;
                
@@ -140,9 +142,9 @@ namespace MonerisTest
             {
                 if (value is int customerId)
                 {
-                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+                    Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
-                    PaymentCards = Purchaser?.SavedPaymentCards;
+                    PaymentCards = Purchaser?.SavedPaymentCards.ToList();
                   
                 }
             }

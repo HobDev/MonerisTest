@@ -1,6 +1,5 @@
 ﻿
 
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MonerisTest.ViewModels
 {
@@ -22,6 +21,8 @@ namespace MonerisTest.ViewModels
      
         string? permanentToken;
 
+        Realm realm;
+
 
         //after getting temporary token the card verification is the first step in the payment process. The successful card verification returns an issuer ID. The issuer ID is use to save the permanent token in the Moneris account. The permanent token is used for current and future purchases.
         private readonly ICardVerificationService? cardVerificationService;
@@ -29,10 +30,9 @@ namespace MonerisTest.ViewModels
         private readonly IAddTokenService? addTokenService;
         private readonly IConvenienceFeeService? convenienceFeeService;
 
-        private readonly PaymentContext? paymentContext;    
-        
+       
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, PaymentContext paymentContext, IConvenienceFeeService convenienceFeeService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService)
         {
             try
             {
@@ -41,9 +41,7 @@ namespace MonerisTest.ViewModels
                 this.addTokenService = addTokenService;
                 this.convenienceFeeService = convenienceFeeService;
 
-
-                this.paymentContext = paymentContext;
-
+                realm= Realm.GetInstance();
               
 
                 saveCard = false;
@@ -79,7 +77,7 @@ namespace MonerisTest.ViewModels
             {
                 if (value is int customerId)
                 {
-                    Purchaser = paymentContext?.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+                    Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
                    
                 }
@@ -256,13 +254,14 @@ namespace MonerisTest.ViewModels
                 MaskedCardNumber = maskedPan,
                 CardExpiryDate= exp_Date,
                
-                CustomerId=Purchaser.CustomerId ,
-                TheCustomer=Purchaser
-               
             };
+            realm.Write(() =>
+            {
 
-             purchaser.SavedPaymentCards.Add(paymentCard);
-            await paymentContext.SaveChangesAsync();
+                purchaser.SavedPaymentCards.Add(paymentCard);
+            });
+             
+            
         }
     }
 }

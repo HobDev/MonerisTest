@@ -21,8 +21,6 @@ namespace MonerisTest
                 });
 
 
-            builder.Services.AddDbContext<PaymentContext>();
-
            
 
             builder.Services.AddHybridWebView();

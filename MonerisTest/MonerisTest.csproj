@@ -51,17 +51,21 @@
         <PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="EJL.MauiHybridWebView" Version="1.0.0-preview6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.10" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.10" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+        <PackageReference Include="Realm" Version="11.7.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="eSELECTplus_dotNet_API">
         <HintPath>G:\My Drive\Clients\Daflo\Dome\Moneris\eCommerce-Unified-API-dotNet-master\eSELECTplus_dotNet_API.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DataAccessLayer\" />
     </ItemGroup>
 
 
