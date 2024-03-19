@@ -51,6 +51,8 @@ namespace MonerisTest.Models
         // only for approved transactions
         public string AuthorizationNumber { get; set; }
 
+
+        // this data is used for reference the transactions on the host system. In the 17 digits reference number the first 8 digits are Terminal Id,  the second 3 digits are the shift number, the third 3 digits are the batch number and the fourth 3 digits are the transaction number with the batch
         public string ReferenceNumber { get; set; }
 
         // code returned from the transaction

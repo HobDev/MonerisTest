@@ -244,8 +244,6 @@ namespace MonerisTest.ViewModels
                     break;
             }
           
-           
-          
 
 
             decimal amount = decimal.TryParse(transAmount, out decimal TotalAmount) ? TotalAmount : 0;

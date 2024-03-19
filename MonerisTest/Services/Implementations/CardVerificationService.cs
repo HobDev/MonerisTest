@@ -25,7 +25,7 @@ namespace MonerisTest.Services.Implementations
             /*************** Credential on File *************************************/
             CofInfo cof = new CofInfo();
             cof.SetPaymentIndicator("U");
-            cof.SetPaymentInformation("0");
+            cof.SetPaymentInformation("7");
            
             ResCardVerificationCC rescardverify = new ResCardVerificationCC();
             rescardverify.SetDataKey(tempToken);
