@@ -25,7 +25,7 @@ public class BookingPage : ContentPage
                     new Label{Text="Saved Cards:", TextColor=Colors.Black}.Bind(Label.IsVisibleProperty, nameof(viewModel.PaymentCards),converter: new IsListNotNullOrEmptyConverter()),
                     new CollectionView
                     {
-                       
+                       SelectionMode=SelectionMode.Single,
                         ItemTemplate = new DataTemplate(() =>
                         {
                             
@@ -34,7 +34,7 @@ public class BookingPage : ContentPage
                                 
                                 Children=
                                 {
-                                 new CheckBox{},
+                                
                                new Label{TextColor= Colors.Black}.Bind(Label.TextProperty, nameof(PaymentCard.MaskedCardNumber)),
                                 }
                             };

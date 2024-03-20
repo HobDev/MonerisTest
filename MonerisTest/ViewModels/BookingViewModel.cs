@@ -62,33 +62,33 @@ namespace MonerisTest
         {
             try
             {
-                await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, {"amount", TotalAmount } });
 
-                //if (SelectedCard == null)
-                //{
-                //    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", new Dictionary<string, object> { { "customerId", Purchaser.CustomerId } , {"amount", TotalAmount }});
-                //}
-                //else
-                //{
-                //    // Make a payment using the permanent token
-                //    string? token = SelectedCard.PermanentToken;
-                //    if (!string.IsNullOrWhiteSpace(token))
-                //    {
-                //        PurchaseData purchaseData = new PurchaseData
-                //        (
-                //            store_Id: AppConstants.STORE_ID,
-                //            api_Token: AppConstants.API_TOKEN,
-                //            token: token,
-                //            order_Id: Guid.NewGuid().ToString(),
-                //            amount: TotalAmount.ToString(),
-                //            cust_Id: null
-                //        );
-                //        Receipt? receipt = await purchaseService.Purchase(purchaseData);
-                //        await SavePurchaseData(receipt);
-                //        await convenienceFeeService.ChargeConvenienceFee(TotalAmount);
-                //    }
 
-                //}
+                if (SelectedCard == null)
+                {
+                    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "amount", TotalAmount } });
+                }
+                else
+                {
+                    // Make a payment using the permanent token
+                    string? token = SelectedCard.PermanentToken;
+                    if (!string.IsNullOrWhiteSpace(token))
+                    {
+                        PurchaseData purchaseData = new PurchaseData
+                        (
+                            store_Id: AppConstants.STORE_ID,
+                            api_Token: AppConstants.API_TOKEN,
+                            token: token,
+                            order_Id: Guid.NewGuid().ToString(),
+                            amount: TotalAmount.ToString(),
+                            cust_Id: null
+                        );
+                        Receipt? receipt = await purchaseService.Purchase(purchaseData);
+                        await SavePurchaseData(receipt);
+                        await convenienceFeeService.ChargeConvenienceFee(TotalAmount);
+                    }
+
+                }
 
             }
             catch (Exception ex)

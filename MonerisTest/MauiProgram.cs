@@ -53,6 +53,7 @@ namespace MonerisTest
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
             builder.Services.AddSingleton<IConvenienceFeeService, ConvenienceFeeService>();
             builder.Services.AddSingleton<IRefundService, RefundService>();
+            builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
 
 
             return builder;

@@ -11,7 +11,7 @@ namespace MonerisTest.Services.Implementations
         /// </summary>
         /// <param name="tempToken"></param>
         /// <returns></returns>
-        public async Task<string?> VerifyPaymentCard(string tempToken)
+        public async Task<Receipt?> VerifyPaymentCard(string tempToken)
         {
             String store_id = AppConstants.STORE_ID;
             String api_token = AppConstants.API_TOKEN;
@@ -44,15 +44,9 @@ namespace MonerisTest.Services.Implementations
             try
             {
                 Receipt receipt = mpgReq.GetReceipt();
-               
-                string responseCode = receipt.GetResponseCode();
-                string message =  receipt.GetMessage();
-                string complete =  receipt.GetComplete();
-                string timedOut =  receipt.GetTimedOut();
-                string issuerId = receipt.GetIssuerId();
-               
 
-                return issuerId;
+
+                return receipt;
             }
             catch (Exception e)
             {

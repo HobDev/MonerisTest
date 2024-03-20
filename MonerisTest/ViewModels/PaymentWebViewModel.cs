@@ -29,10 +29,11 @@ namespace MonerisTest.ViewModels
         private readonly IPurchaseService? purchaseService;
         private readonly IAddTokenService? addTokenService;
         private readonly IConvenienceFeeService? convenienceFeeService;
+        private readonly IReceiptErrorMessageService? receiptErrorMessageService;
 
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService, IReceiptErrorMessageService receiptErrorMessageService)
         {
             try
             {
@@ -40,6 +41,7 @@ namespace MonerisTest.ViewModels
                 this.purchaseService = purchaseService;
                 this.addTokenService = addTokenService;
                 this.convenienceFeeService = convenienceFeeService;
+                this.receiptErrorMessageService = receiptErrorMessageService;
 
                 realm= Realm.GetInstance();
               
@@ -104,18 +106,29 @@ namespace MonerisTest.ViewModels
                 {
                     throw new Exception("Temporary Token is not available");
                 }   
-                string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
-                if (issuerId != null)
+              //  string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
+                Receipt receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
+                string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
+                if (errorMessage != null)
                 {
-                    if (SaveCard)
-                    {
-                        await GetPermanentToken(issuerId);
-                    }
-                    else
-                    {
-                        await CompletePurchase(tempToken);
-                    }
+                    await Shell.Current.DisplayAlert("Error", errorMessage, "OK");
                 }
+                else
+                {
+                    string issuerId = receipt.GetIssuerId();
+                    if (issuerId != null)
+                    {
+                        if (SaveCard)
+                        {
+                            await GetPermanentToken(issuerId);
+                        }
+                        else
+                        {
+                            await CompletePurchase(tempToken);
+                        }
+                    }
+                }   
+
             }
             catch (Exception ex)
             {

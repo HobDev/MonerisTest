@@ -1,5 +1,8 @@
 
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace MonerisTest.Pages;
 
 public class PaymentWebPage : ContentPage
@@ -61,13 +64,43 @@ public class PaymentWebPage : ContentPage
             _mainPage = mainPage;
         }
 
-        public static async void CallMeFromScript(string? dataKey, string? bin)
+        public static async void CallMeFromScript(string? dataKey, string? bin, string? errorMessage, object? responseCode)
         {
+            // Handle the message received from JavaScript
             try
             {
-                // Handle the message received from JavaScript
+                if(responseCode!=null)
+                {
+                  
+                    if(responseCode is string)
+                    {
 
-                if (dataKey != null)
+                    }
+                    else 
+                    {
+                        // convert object to stream
+                       
+                        var convertAgain= (JsonValueKind)responseCode;    
+
+                        //var responseCodeArray =await System.Text.Json.JsonSerializer.DeserializeAsync<JsonValueKind.Array>(responseCode);
+                        //foreach (var item in convertAgain)
+                        //{
+                        //    if (item is string)
+                        //    {
+                        //        await Shell.Current.DisplayAlert("Error", item.ToString(), "Ok");
+                        //    }
+                        //}
+                    }   
+                }
+               
+               else if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                   
+                        await Shell.Current.DisplayAlert("Error", errorMessage, "Ok");
+                  
+                }
+
+               else if (!string.IsNullOrWhiteSpace(dataKey))
                 {
                     // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
                     MainThread.BeginInvokeOnMainThread(async () =>
