@@ -13,7 +13,8 @@
         document.getElementById("monerisFrame").style.display = 'none';
 
 
-        HybridWebView.SendInvokeMessageToDotNet("CallMeFromScript", [respData.dataKey, respData.bin, respData.errorMessage, respData.responseCode]);
+        HybridWebView.SendInvokeMessageToDotNet("CallMeFromScript", [respData.dataKey, respData.bin, respData.errorMessage, respData]);
+        
     }
     window.onload = function () {
         if (window.addEventListener) {

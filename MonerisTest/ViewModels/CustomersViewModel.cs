@@ -51,6 +51,7 @@ namespace MonerisTest.ViewModels
                         PhoneNumber = "+12345",
                         Address = "Whitby, Canada",
                     };
+                   
 
                     Customer customer2 = new Customer
                     {

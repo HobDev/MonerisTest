@@ -1,5 +1,7 @@
 
 
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -64,43 +66,75 @@ public class PaymentWebPage : ContentPage
             _mainPage = mainPage;
         }
 
-        public static async void CallMeFromScript(string? dataKey, string? bin, string? errorMessage, object? responseCode)
+        public static async void CallMeFromScript(string? dataKey, string? bin, string? errorMessage, JsonElement? respData)
         {
             // Handle the message received from JavaScript
             try
             {
-                if(responseCode!=null)
-                {
-                  
-                    if(responseCode is string)
-                    {
 
-                    }
-                    else 
-                    {
-                        // convert object to stream
-                       
-                        var convertAgain= (JsonValueKind)responseCode;    
-
-                        //var responseCodeArray =await System.Text.Json.JsonSerializer.DeserializeAsync<JsonValueKind.Array>(responseCode);
-                        //foreach (var item in convertAgain)
-                        //{
-                        //    if (item is string)
-                        //    {
-                        //        await Shell.Current.DisplayAlert("Error", item.ToString(), "Ok");
-                        //    }
-                        //}
-                    }   
-                }
-               
-               else if (!string.IsNullOrWhiteSpace(errorMessage))
+                if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
                    
-                        await Shell.Current.DisplayAlert("Error", errorMessage, "Ok");
-                  
+                    if (respData?.ValueKind == JsonValueKind.Object)
+                    {                  
+                            // UTF-8 encoding of responseCode
+                            byte[]? responseDataBytes = Encoding.UTF8.GetBytes(respData?.GetRawText());
+
+                            // responseCodeBytes to MemoryStream    
+                            using MemoryStream responseDataStream = new(responseDataBytes);
+
+                            //Convert string to object
+                            dynamic? myDeserializedClass = await System.Text.Json.JsonSerializer.DeserializeAsync<dynamic>(responseDataStream);
+
+                        // convert myDeserializedClass.responseCode to stream
+                        using MemoryStream responseCodeStream = new(Encoding.UTF8.GetBytes(myDeserializedClass.responseCode));
+
+                        MonerisHostedTokenizationResponse? monerisTokenResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<MonerisHostedTokenizationResponse>(responseCodeStream);    
+
+                        
+
+                        // split the responseCodeValue by comma
+                     
+                                
+                              //  string[]? responseCodeArray = responseCodeValue.Split(','); 
+                             
+
+                                //if responseCodeArray is not null
+                                //if (responseCodeArray != null)
+                                //{
+                                //    //if responseCodeArray is not empty
+                                //    if (responseCodeArray.Length > 0)
+                                //    {
+
+                                //        foreach (var item in responseCodeArray)
+                                //        {
+                                //            string message = string.Empty;
+                                //            int count = 0;
+                                //            if (!string.IsNullOrWhiteSpace(item))
+                                //            {
+                                //                if (count == 0)
+                                //                {
+                                //                    message = item;
+                                //                    count++;
+                                //                }
+                                //                else
+                                //                {
+                                //                    message = message + "," + item;
+                                //                }
+
+
+                                //            }
+
+                                //        }
+                                //    }
+                                //}
+                            }
+
                 }
 
-               else if (!string.IsNullOrWhiteSpace(dataKey))
+              
+
+                else if (!string.IsNullOrWhiteSpace(dataKey))
                 {
                     // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
                     MainThread.BeginInvokeOnMainThread(async () =>

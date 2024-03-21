@@ -42,8 +42,18 @@ namespace MonerisTest
                
                 this.purchaseService = purchaseService;
                 this.convenienceFeeService = convenienceFeeService;
-                realm= Realm.GetInstance(); 
+                realm= Realm.GetInstance();
 
+              
+
+                SelectedCard = new PaymentCard
+                {
+                    CardExpiryDate = "12/2023",
+
+                    MaskedCardNumber = "4242********4242",
+                };
+                PaymentCards = new ObservableCollection<PaymentCard>(); 
+                PaymentCards.Add(SelectedCard);
                 TotalAmount = 1.00M;
                
             }
@@ -149,6 +159,8 @@ namespace MonerisTest
                     CustomerName = Purchaser?.Name;
                     PaymentCards = Purchaser?.SavedPaymentCards.ToObservableCollection();
                     SelectedCard = PaymentCards?.FirstOrDefault();
+                    
+
                 }
             }
         }

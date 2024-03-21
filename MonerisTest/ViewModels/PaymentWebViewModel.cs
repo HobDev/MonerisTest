@@ -108,6 +108,7 @@ namespace MonerisTest.ViewModels
                 }   
               //  string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
                 Receipt receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
+               
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
@@ -127,7 +128,7 @@ namespace MonerisTest.ViewModels
                             await CompletePurchase(tempToken);
                         }
                     }
-                }   
+                }
 
             }
             catch (Exception ex)
