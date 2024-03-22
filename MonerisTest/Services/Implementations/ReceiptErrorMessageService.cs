@@ -19,6 +19,7 @@ namespace MonerisTest.Services.Implementations
 
             if (complete == "true" && timedOut == "false")
             {
+                // the transaction was successfull. the responseCode will indicate if the transaction was approved or declined
                 string responseCode = receipt.GetResponseCode();
                 bool result = int.TryParse(responseCode, out int responseCodeInt);
                if (result)
@@ -28,6 +29,11 @@ namespace MonerisTest.Services.Implementations
                         return receipt.GetMessage();
                     }
                 }
+            }
+
+            else
+            {
+                return receipt.GetMessage();
             }
 
             return errorMessage;

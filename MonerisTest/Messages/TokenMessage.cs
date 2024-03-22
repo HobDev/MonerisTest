@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace MonerisTest
+﻿namespace MonerisTest.Messages
 {
     public class TokenMessage : ValueChangedMessage<string>
     {

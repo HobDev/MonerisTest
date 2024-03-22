@@ -1,9 +1,10 @@
 ﻿
 using System.Reflection.Metadata;
+using MonerisTest.Messages;
 
 namespace MonerisTest.ViewModels
 {
-   public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable
+    public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable
     {
         [ObservableProperty]
         Customer? purchaser;
@@ -62,6 +63,26 @@ namespace MonerisTest.ViewModels
                         }
                     });
                 });
+
+                WeakReferenceMessenger.Default.Register<ErrorMessage>(this, (sender, message) =>
+                {
+                    // Handle the message
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                       
+                        if (!string.IsNullOrWhiteSpace(message.Value))
+                        {
+
+                            //Dictionary<string, object> errorDictionary = new Dictionary<string, object> { { "errorMessage", message.Value } };
+
+                            //await Shell.Current.GoToAsync(nameof(BookingPage), errorDictionary);
+                            await Shell.Current.DisplayAlert("Error", message.Value, "Ok");
+
+                        }
+                    });
+                });
+
+
             }
             catch (Exception ex)
             {

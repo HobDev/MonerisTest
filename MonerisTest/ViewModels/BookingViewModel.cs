@@ -44,16 +44,6 @@ namespace MonerisTest
                 this.convenienceFeeService = convenienceFeeService;
                 realm= Realm.GetInstance();
 
-              
-
-                SelectedCard = new PaymentCard
-                {
-                    CardExpiryDate = "12/2023",
-
-                    MaskedCardNumber = "4242********4242",
-                };
-                PaymentCards = new ObservableCollection<PaymentCard>(); 
-                PaymentCards.Add(SelectedCard);
                 TotalAmount = 1.00M;
                
             }
@@ -76,7 +66,8 @@ namespace MonerisTest
 
                 if (SelectedCard == null)
                 {
-                    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "amount", TotalAmount } });
+                    Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "amount", TotalAmount } };
+                    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", query);
                 }
                 else
                 {
@@ -147,7 +138,7 @@ namespace MonerisTest
             string? avs_Zipcode = receipt.GetResDataAvsZipcode();
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             // This method is called when the page is navigated to with a query string.
             // The query string is parsed into a dictionary and passed to this method.
@@ -158,11 +149,18 @@ namespace MonerisTest
                     Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
                     PaymentCards = Purchaser?.SavedPaymentCards.ToObservableCollection();
-                    SelectedCard = PaymentCards?.FirstOrDefault();
-                    
-
                 }
             }
+
+           else  if (query.TryGetValue("errorMessage", out object? message))
+            {
+                if (message is string errorMessage)
+                {
+                    await Shell.Current.DisplayAlert("Error", errorMessage, "Ok");
+                }
+            }
+
+            
         }
     }
 }

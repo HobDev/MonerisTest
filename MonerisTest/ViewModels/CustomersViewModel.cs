@@ -86,7 +86,8 @@ namespace MonerisTest.ViewModels
         {
             try
             {
-                await Shell.Current.GoToAsync($"{nameof(BookingPage)}", new Dictionary<string, object> { { "customerId", customer.CustomerId} });
+                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", customer.CustomerId } };
+                await Shell.Current.GoToAsync($"{nameof(BookingPage)}", query);
             }
             catch (Exception ex)
             {

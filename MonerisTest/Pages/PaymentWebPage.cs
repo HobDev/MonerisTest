@@ -1,6 +1,9 @@
 
 
+using Moneris;
+using MonerisTest.Messages;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,7 +16,9 @@ public class PaymentWebPage : ContentPage
     {
         try
         {
-          
+
+            
+
             HybridWebView.HybridWebView hybridWebView = new()
             {
                 HybridAssetRoot = "hybrid_root",
@@ -24,6 +29,7 @@ public class PaymentWebPage : ContentPage
             CheckBox checkBox = new();
             checkBox.SetBinding(CheckBox.IsCheckedProperty, nameof(viewModel.SaveCard));
 
+           
             Content = new VerticalStackLayout
             {
                 Spacing = 20,
@@ -66,7 +72,7 @@ public class PaymentWebPage : ContentPage
             _mainPage = mainPage;
         }
 
-        public static async void CallMeFromScript(string? dataKey, string? bin, string? errorMessage, JsonElement? respData)
+        public  async void CallMeFromScript(string? dataKey, string? bin, string? errorMessage, JsonElement? responseCode)
         {
             // Handle the message received from JavaScript
             try
@@ -74,62 +80,34 @@ public class PaymentWebPage : ContentPage
 
                 if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
-                   
-                    if (respData?.ValueKind == JsonValueKind.Object)
-                    {                  
-                            // UTF-8 encoding of responseCode
-                            byte[]? responseDataBytes = Encoding.UTF8.GetBytes(respData?.GetRawText());
+                        // convert jsonElement to string[]
+                        string[]? responseCodeArray = responseCode.Value.EnumerateArray().Select(x => x.GetString()).ToArray();
 
-                            // responseCodeBytes to MemoryStream    
-                            using MemoryStream responseDataStream = new(responseDataBytes);
-
-                            //Convert string to object
-                            dynamic? myDeserializedClass = await System.Text.Json.JsonSerializer.DeserializeAsync<dynamic>(responseDataStream);
-
-                        // convert myDeserializedClass.responseCode to stream
-                        using MemoryStream responseCodeStream = new(Encoding.UTF8.GetBytes(myDeserializedClass.responseCode));
-
-                        MonerisHostedTokenizationResponse? monerisTokenResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<MonerisHostedTokenizationResponse>(responseCodeStream);    
-
-                        
-
-                        // split the responseCodeValue by comma
-                     
-                                
-                              //  string[]? responseCodeArray = responseCodeValue.Split(','); 
-                             
-
-                                //if responseCodeArray is not null
-                                //if (responseCodeArray != null)
-                                //{
-                                //    //if responseCodeArray is not empty
-                                //    if (responseCodeArray.Length > 0)
-                                //    {
-
-                                //        foreach (var item in responseCodeArray)
-                                //        {
-                                //            string message = string.Empty;
-                                //            int count = 0;
-                                //            if (!string.IsNullOrWhiteSpace(item))
-                                //            {
-                                //                if (count == 0)
-                                //                {
-                                //                    message = item;
-                                //                    count++;
-                                //                }
-                                //                else
-                                //                {
-                                //                    message = message + "," + item;
-                                //                }
+                            int count = 0;
+                            string message = string.Empty;
+                            foreach (var item in responseCodeArray)
+                                {                                
+                                    if (!string.IsNullOrWhiteSpace(item))
+                                    {
+                            string errorText = await GetErrorMessage(item);
+                                    if (count == 0)
+                                        {
+                                            message = errorText;
+                                            count++;
+                                        }
+                                        else
+                                        {
+                                            message = message + "\n\n" + errorText;
+                                        }
 
 
-                                //            }
-
-                                //        }
-                                //    }
-                                //}
+                                    }
                             }
 
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        WeakReferenceMessenger.Default.Send(new ErrorMessage(message));
+                    });
                 }
 
               
@@ -151,6 +129,40 @@ public class PaymentWebPage : ContentPage
             }
            
 
+        }
+
+        private static async Task<string> GetErrorMessage(string item)
+        {
+            string errorMessage = string.Empty; 
+            
+          switch(item)
+            {
+                case "940":
+                     errorMessage = "Invalid profile id (on tokenization request)";               
+                    break;
+
+                case "941":
+                     errorMessage = "Error generating token";
+                    break;
+
+                case "942":
+                    errorMessage = "Invalid Profile ID, or source URL";
+                    break;
+
+                case "943":
+                   errorMessage = "Card data is invalid (not numeric, fails mod10, we will remove spaces)";
+                    break;
+
+                case "944":
+                    errorMessage = "Invalid expiration date (mmyy, must be current month or in the future)";
+                    break;
+
+                case "945":
+                    errorMessage = "Invalid CVD data (not 3-4 digits)";
+                    break;
+            }
+
+            return errorMessage;
         }
     }
 }

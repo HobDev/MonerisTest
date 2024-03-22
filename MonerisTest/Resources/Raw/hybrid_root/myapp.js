@@ -3,17 +3,21 @@
     function doMonerisSubmit() {
         var monFrameRef = document.getElementById('monerisFrame').contentWindow;
         monFrameRef.postMessage('tokenize', 'https://esqa.moneris.com/HPPtoken/index.php');
-        //change link according to table above
+        
         return false;
     }
     var respMsg = function (e) {
         var respData = eval("(" + e.data + ")");
-        document.getElementById("monerisResponse").innerHTML = " Response Code: " +
+       // document.getElementById("monerisResponse").innerHTML = " Response Code: " +
             respData.responseCode + " Token: " + respData.dataKey + " Bind: " + respData.bin + " Error Message: " + respData.errorMessage;
-        document.getElementById("monerisFrame").style.display = 'none';
+        // document.getElementById("monerisFrame").style.display = 'none';
 
+        
+        HybridWebView.SendInvokeMessageToDotNet("CallMeFromScript", [respData.dataKey, respData.bin, respData.errorMessage, respData.responseCode]);
 
-        HybridWebView.SendInvokeMessageToDotNet("CallMeFromScript", [respData.dataKey, respData.bin, respData.errorMessage, respData]);
+       
+
+       
         
     }
     window.onload = function () {
