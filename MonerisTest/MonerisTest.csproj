@@ -52,8 +52,8 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="EJL.MauiHybridWebView" Version="1.0.0-preview6" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.10" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.10" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.14" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Realm" Version="11.7.0" />
     </ItemGroup>
