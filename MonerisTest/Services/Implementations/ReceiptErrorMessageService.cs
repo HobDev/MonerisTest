@@ -21,29 +21,39 @@ namespace MonerisTest.Services.Implementations
             {
                 // the transaction was successfull. the responseCode will indicate if the transaction was approved or declined
                 string responseCode = receipt.GetResponseCode();
+                string iSOCode = receipt.GetISO();
+                if(responseCode==null)
+                {
+                    return "null - transaction was not sent for authorization";
+                }
                 bool result = int.TryParse(responseCode, out int responseCodeInt);
                if (result)
                 {
                     // responseCode from 0 to 49 indicates the transaction was approved. responseCode from 50 to 999 indicates the transaction was declined
-                    if (responseCodeInt >= 50 && responseCodeInt <= 999)
+                    if (responseCodeInt >= 50 )
                     {
-                        errorMessage = await GetDeclinedResponseMessage(responseCode);
+                        errorMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
                         if (errorMessage == string.Empty)
                         {
                             errorMessage = await GetReferralResponseMessage(responseCode);
                             if (errorMessage == string.Empty)
                             {
                                 errorMessage = await GetSystemErrorResponseMessage(responseCode);
+                                if (errorMessage == string.Empty)
+                                {
+                                    errorMessage = await GetVisaResponseMessage(responseCode);
+                                    if (errorMessage == string.Empty)
+                                    {
+                                        errorMessage = await GetMasterCardResponseMessage(responseCode);
+                                    }
+                                }
                             }
                         }
-                        if (string.IsNullOrWhiteSpace(errorMessage))
+                        if (errorMessage== string.Empty)
                         {
                             errorMessage = receipt.GetMessage();
                         }
-                        if(errorMessage == null)
-                        {
-                            errorMessage = string.Empty;
-                        }
+                       
                         return responseCode + " - " + errorMessage;
                     }
                 }
@@ -53,34 +63,154 @@ namespace MonerisTest.Services.Implementations
             {
                 // the transaction was failed. the responseCode will indicate the reason of failure
                 string responseCode = receipt.GetResponseCode();
-                bool result = int.TryParse(responseCode, out int responseCodeInt);
-                if (result)
+                string iSOCode = receipt.GetISO();
+                if (responseCode == null)
                 {
-                    
-                        errorMessage = await GetDeclinedResponseMessage(responseCode);
+                    return "null - transaction was not sent for authorization";
+                }
+               
+                        errorMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
                         if(errorMessage== string.Empty)
                         {                        
                            errorMessage= await GetReferralResponseMessage(responseCode);
                             if(errorMessage == string.Empty)
-                        {
+                            {
                             errorMessage =await GetSystemErrorResponseMessage(responseCode);
-                            }   
+                               if(errorMessage == string.Empty)
+                               {
+                                  errorMessage =await GetVisaResponseMessage(responseCode);
+                                    if(errorMessage == string.Empty)
+                            {
+                                        errorMessage =await  GetMasterCardResponseMessage(responseCode);
+                                         if(errorMessage == string.Empty)
+                                         {
+                                              errorMessage = await GetAmexResponseMessage(responseCode);
+                                               if(errorMessage == string.Empty)
+                                    {
+                                                   errorMessage = await GetCreditCardResponseMessage(responseCode);
+                                                    if(errorMessage == string.Empty)
+                                                    {
+                                                        errorMessage = await GetSystemDeclineResponseMessage(responseCode);
+                                                        if(errorMessage == string.Empty)
+                                                        {
+                                                            errorMessage = await GetAdminResponseMessage(responseCode);
+                                                        }
+                                                    }
+                                               }
+                                         }
+                                    }
+                               }
+                            }
                         }
 
-                        if (string.IsNullOrWhiteSpace(errorMessage))
+                       if (errorMessage == string.Empty)
                         {
                             errorMessage = receipt.GetMessage();
                         }
-                       if (errorMessage == null)
-                        {
-                            errorMessage = string.Empty;
-                        }
-                        return responseCode + " - " + errorMessage;
-                
-                }
+                      
+                        return responseCode + " - " + errorMessage;      
+                       
             }
 
             return errorMessage;
+        }
+
+        private async Task<string> GetAmexResponseMessage(string responseCode)
+        {
+            if(responseCode == "426")
+            {
+                return "(AMEX - Denial 12) Call Amex 12";
+            }
+            if(responseCode == "427")
+            {
+                return "AMEX - invalid merchant";
+            }
+            if(responseCode == "429")
+            {
+                return "AMEX -  account error retry";
+            }
+            if(responseCode == "430")
+            {
+                return "AMEX - expired card";
+            }
+            if(responseCode == "431")
+            {
+                return "AMEX - call Amex";
+            }
+            if(responseCode == "434")
+            {
+                return "AMEX - call 03, Invalid CVD (CID)";
+            }
+            if(responseCode == "435")
+            {
+                return "AMEX - system down";
+            }
+            if(responseCode == "436")
+            {
+                return "AMEX - call 05";
+            }
+            if(responseCode == "437")
+            {
+                return "AMEX - declined";
+            }
+            if(responseCode == "438")
+            {
+                return "AMEX - declined";
+            }
+            if(responseCode == "439")
+            {
+                return "AMEX - service error";
+            }
+            if(responseCode == "440")
+            {
+                return "AMEX - call Amex";
+            }
+            if(responseCode == "441")
+            {
+                return "AMEX - amount error, retry";
+            }
+
+
+            return string.Empty;
+        }
+
+        private async Task<string> GetMasterCardResponseMessage(string reponseCode)
+        {
+            if(reponseCode == "416")
+            {
+                return "declined, use updated card";
+            }
+            if(reponseCode == "421")
+            {
+                return "card declined, do not retry";
+            }
+            if(reponseCode == "422")
+            {
+                return "stop payment, do not retry";
+            }
+            if(reponseCode == "481")
+            {
+                return "declined";
+            }
+            return string.Empty;
+        }
+
+        private async Task<string> GetVisaResponseMessage(string responseCode)
+        {
+           if(responseCode=="421")
+            {
+                return "card declined, do not retry";
+            }
+           else if(responseCode=="422")
+            {
+                return "card declined, do not retry stop payment";
+            }
+            else if(responseCode=="423")
+            {
+                return "(verification data failed) declined verification failed";
+            }
+           
+            return string.Empty;
         }
 
         private async Task<string> GetSystemErrorResponseMessage(string responseCode)
@@ -225,207 +355,220 @@ namespace MonerisTest.Services.Implementations
              return string.Empty;
         }
 
-        private async Task<string?> GetDeclinedResponseMessage(string responseCode)
+        private async Task<string> GetDeclinedResponseMessage(string responseCode, string iSOCode)
         {
+            // iso codes which don't have a specific response code
+            if (iSOCode == "48" || iSOCode == "53" || iSOCode == "78")
+            {
+                return "no savings account retry or cancel";
+            }
+            else if(iSOCode=="89")
+            {
+                return "(declined) system problem";
+            }
+            else if (iSOCode == "91")
+            {
+                return "(merchant link not logged on) unable to authorize";
+            }
 
             // declined response codes
-           if(responseCode == "50")
+            if (responseCode == "050")
             {
                 return "re-try system problem";
             }
-            else if(responseCode == "51")
+            else if(responseCode == "051")
             {
                 return "expired card";
             }
-            else if(responseCode == "52")
+            else if(responseCode == "052")
             {
                 return "Excess pin tries";
             }
-            else if(responseCode == "53")
+            else if(responseCode == "053")
             {
                 return "(no sharing) re-try edit error";
             }
-            else if(responseCode == "54")
+            else if(responseCode == "054")
             {
                 return "(no security module) re-try system problem";
             }
-            else if(responseCode == "55")
+            else if(responseCode == "055")
             {
                 return "(invalid transaction) card not supported";
             }
-            else if(responseCode == "56")
+            else if(responseCode == "056")
             {
                 return "card not supported";
             }
-            else if(responseCode == "57")
+            else if(responseCode == "057")
             {
                 return "(lost or stolen card) card use limited";
             }
-            else if(responseCode == "58")
+            else if(responseCode == "058")
             {
                 return "(invalid status) card use limited";
             }
-            else if(responseCode == "59")
+            else if(responseCode == "059")
             {
                 return "(restricted card) card use limited";
             }
-            else if(responseCode == "60")
+            else if(responseCode == "060")
             {
                 return "No chequing/savings account re-try or cancel";
             }
-            else if(responseCode == "61")
+            else if(responseCode == "061")
             {
                 return "(no pbf) card is not set up";
             }
-            else if(responseCode == "62")
+            else if(responseCode == "062")
             {
                 return "(pbf update error) re-try system problem";
             }
-            else if(responseCode == "63")
+            else if(responseCode == "063")
             {
                 return "(invalid authorization type) re-try system problem";
             }
-            else if(responseCode == "64")
+            else if(responseCode == "064")
             {
                 return "(bad track 2) re-try invalid card";
             }
-            else if(responseCode == "65")
+            else if(responseCode == "065")
             {
                 return "(adjustment not allowed) exceeds correction Limit";
             }
-            else if(responseCode == "66")
+            else if(responseCode == "066")
             {
                 return "(invalid credit card advance increment) re-try system problem";
             }
-            else if(responseCode == "67")
+            else if(responseCode == "067")
             {
                 return "(invalid transaction date) re-try edit error";
             }
-            else if(responseCode == "68")
+            else if(responseCode == "068")
             {
                 return "(PTLF error) re-try system problem";
             }
-            else if(responseCode == "69")
+            else if(responseCode == "069")
             {
                 return "re-try edit error";
             }
-            else if(responseCode == "70")
+            else if(responseCode == "070")
             {
                 return "invalid card";
             }
-            else if(responseCode == "71")
+            else if(responseCode == "071")
             {
                 return "invalid card";
             }
-            else if(responseCode == "72")
+            else if(responseCode == "072")
             {
                 return "(card on national NEG file) re-try system problem";
             }
-            else if(responseCode == "73")
+            else if(responseCode == "073")
             {
                 return "(invalid route service/destination) invalid card";
             }
-            else if(responseCode == "74")
+            else if(responseCode == "074")
             {
                 return "issuer not online";
             }   
-            else if(responseCode == "75")
+            else if(responseCode == "075")
             {
                 return "(invalid pan length) re-try invalid card";
             }
-            else if(responseCode == "76")
+            else if(responseCode == "076")
             {
                 return "Insufficient funds";
             }
-            else if(responseCode == "77")
+            else if(responseCode == "077")
             {
                 return "(pre-auth full) Limit exceeded";
             }
-            else if(responseCode == "78")
+            else if(responseCode == "078")
             {
                 return "(duplicate transaction/ request in progress) re-try system problem";
             }
-            else if(responseCode == "79")
+            else if(responseCode == "079")
             {
                 return "(maximum online refund reached) limit exceeded";
             }
-            else if(responseCode == "80")
+            else if(responseCode == "080")
             {
                 return "(maximum online refund reached) limit exceeded";
             }
-           else if(responseCode == "81")
+           else if(responseCode == "081")
             {
                 return "(maximum credit per refund reached) limit exceeded";
             }
-           else if(responseCode == "82")
+           else if(responseCode == "082")
             {
                 return "(number of times used exceeded) usage exceeded";
             }
-           else if(responseCode == "83")
+           else if(responseCode == "083")
             {
                 return "(maximum refund credit reached) limit exceeded";
             }
-           else if(responseCode == "84")
+           else if(responseCode == "084")
             {
                 return "duplicate transaction - authorization number has already been corrected by host";
             }
-           else if(responseCode == "85")
+           else if(responseCode == "085")
             {
                 return "(inquiry not allowed) card not supported";
             }
-           else if(responseCode == "86")
+           else if(responseCode == "086")
             {
                 return "(over floor limit) re-try system problem";
             }
-           else if(responseCode == "87")
+           else if(responseCode == "087")
             {
                 return "(maximum number of refund credit by retailer) over retailer limit";
             }
-           else if(responseCode == "88")
+           else if(responseCode == "088")
             {
                 return "(place call) re-try system problem";
             }
-           else if(responseCode == "89")
+           else if(responseCode == "089")
             {
                 return "(CAF status inactive or closed) card use limited";
             }
-           else if(responseCode == "90")
+           else if(responseCode == "090")
             {
                 return "(referral file full) re-try system problem";
             }
-           else if(responseCode == "91")
+           else if(responseCode == "091")
             {
                 return "(NEG file problem) re-try system problem";
             }
-           else if(responseCode == "92")
+           else if(responseCode == "092")
             {
                 return "(advance less than minimum) over retailer limit";
             }
-           else if(responseCode == "93")
+           else if(responseCode == "093")
             {
                 return "(delinquent) re-try system problem";
             }
-           else if(responseCode == "94")
+           else if(responseCode == "094")
             {
                 return "(over table limit) re-try system problem";
             }
-           else if(responseCode == "95")
+           else if(responseCode == "095")
             {
                 return "(amount over maximum / transaction amount limit exceeded) re-try system problem";
             }
-           else if(responseCode == "96")
+           else if(responseCode == "096")
             {
                 return "(pin required) re-try pin error";
             }
-           else if(responseCode == "97")
+           else if(responseCode == "097")
             {
                 return "(mod 10 check failure) re-try invalid card";
             }
-           else if(responseCode == "98")
+           else if(responseCode == "098")
             {
                 return "(force post) re-try system problem";
             }
-           else if(responseCode == "99")
+           else if(responseCode == "099")
             {
                 return "(bad PBF) re-try invalid card";
             }

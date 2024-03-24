@@ -133,7 +133,7 @@ namespace MonerisTest.ViewModels
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
-                    await Shell.Current.DisplayAlert("Error", errorMessage, "OK");
+                    await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
                 }
                 else
                 {
