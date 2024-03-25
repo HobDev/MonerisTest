@@ -21,6 +21,7 @@ public class BookingPage : ContentPage
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
+                    new ImageButton{ Source="close_black", HorizontalOptions=LayoutOptions.Start, WidthRequest=35, HeightRequest=35}.BindCommand(nameof(viewModel.CancelPaymentCommand)),
                     new Label{FontAttributes=FontAttributes.Bold, TextDecorations= TextDecorations.Underline, TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,40),
                     new Label{Text="Saved Cards:", TextColor=Colors.Black}.Bind(Label.IsVisibleProperty, nameof(viewModel.PaymentCards),converter: new IsListNotNullOrEmptyConverter()),
                     new CollectionView

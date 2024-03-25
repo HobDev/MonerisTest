@@ -1,7 +1,6 @@
 ﻿
 
 
-using CommunityToolkit.Maui.Core.Extensions;
 
 namespace MonerisTest
 {
@@ -55,6 +54,20 @@ namespace MonerisTest
           
         }
 
+
+        [RelayCommand]
+        public async Task CancelPayment()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync(nameof(CustomersPage));
+            }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
 
 
         [RelayCommand]
@@ -144,7 +157,7 @@ namespace MonerisTest
             // The query string is parsed into a dictionary and passed to this method.
              if (query.TryGetValue("customerId", out object? value))
             {
-                if (value is int customerId)
+                if (value is string  customerId)
                 {
                     Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
@@ -152,7 +165,7 @@ namespace MonerisTest
                 }
             }
 
-           else  if (query.TryGetValue("errorMessage", out object? message))
+            if (query.TryGetValue("errorMessage", out object? message))
             {
                 if (message is string errorMessage)
                 {

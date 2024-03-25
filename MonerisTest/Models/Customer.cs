@@ -1,14 +1,11 @@
 ﻿
 
-
-using Realms;
-
 namespace MonerisTest.Models
 {
     public partial class Customer : IRealmObject
     {
 
-        public int CustomerId { get; set; } 
+        public string CustomerId { get; set; } = System.Guid.NewGuid().ToString();
 
         public string? Name { get; set; }
        

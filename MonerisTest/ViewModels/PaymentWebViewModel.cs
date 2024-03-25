@@ -1,6 +1,8 @@
 ﻿
-using System.Reflection.Metadata;
-using MonerisTest.Messages;
+
+
+using MonerisTest.Models.Failure;
+using MonerisTest.Services.Implementations.Failure;
 
 namespace MonerisTest.ViewModels
 {
@@ -31,10 +33,11 @@ namespace MonerisTest.ViewModels
         private readonly IAddTokenService? addTokenService;
         private readonly IConvenienceFeeService? convenienceFeeService;
         private readonly IReceiptErrorMessageService? receiptErrorMessageService;
+        private readonly ICardVerificationFailure? cardVerificationFailure; 
 
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService, IReceiptErrorMessageService receiptErrorMessageService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService, IReceiptErrorMessageService receiptErrorMessageService, ICardVerificationFailure cardVerificationFailure)
         {
             try
             {
@@ -43,11 +46,9 @@ namespace MonerisTest.ViewModels
                 this.addTokenService = addTokenService;
                 this.convenienceFeeService = convenienceFeeService;
                 this.receiptErrorMessageService = receiptErrorMessageService;
+                this.cardVerificationFailure = cardVerificationFailure;
 
                 realm= Realm.GetInstance();
-              
-
-                saveCard = false;
 
                 WeakReferenceMessenger.Default.Register<TokenMessage>(this, (sender, message) =>
                 {
@@ -73,11 +74,16 @@ namespace MonerisTest.ViewModels
                         if (!string.IsNullOrWhiteSpace(message.Value))
                         {
 
-                            //Dictionary<string, object> errorDictionary = new Dictionary<string, object> { { "errorMessage", message.Value } };
-
-                            //await Shell.Current.GoToAsync(nameof(BookingPage), errorDictionary);
-                            await Shell.Current.DisplayAlert("Error", message.Value, "Ok");
-
+                            Dictionary<string, object> errorDictionary = new Dictionary<string, object> {{ "customerId", purchaser.CustomerId }, { "errorMessage", message.Value } };
+                            await Shell.Current.GoToAsync(nameof(BookingPage), errorDictionary);
+                          await realm.WriteAsync(async ()=>
+                          {
+                                realm.Add(new RecordOfFailedTokenization
+                                (
+                                    customerId : purchaser.CustomerId,
+                                    errorMessage : message.Value
+                                ));
+                          });
                         }
                     });
                 });
@@ -92,13 +98,28 @@ namespace MonerisTest.ViewModels
            
         }
 
+        [RelayCommand]
+        public async Task CancelPayment()
+        {
+            try
+            {
+                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", purchaser.CustomerId } };
+                await Shell.Current.GoToAsync($"{nameof(BookingPage)}", query);
+            }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             // This method is called when the page is navigated to with a query string.
             // The query string is parsed into a dictionary and passed to this method.
             if (query.TryGetValue("customerId", out object? value))
             {
-                if (value is int customerId)
+                if (value is string customerId)
                 {
                     Purchaser = realm.All<Customer>().FirstOrDefault(c => c.CustomerId == customerId);
                     CustomerName = Purchaser?.Name;
@@ -126,18 +147,21 @@ namespace MonerisTest.ViewModels
                 else if(tempToken==null)
                 {
                     throw new Exception("Temporary Token is not available");
-                }   
-              //  string? issuerId = await cardVerificationService.VerifyPaymentCard(tempToken);
-                Receipt receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
-               
+                }
+
+                // Receipt? receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
+
+                Receipt? receipt = await cardVerificationService.VerifyPaymentCard("hello");
+
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
+                    await cardVerificationFailure.SaveFailedCardVerificationData(receipt);
                     await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
                 }
                 else
                 {
-                    string issuerId = receipt.GetIssuerId();
+                    string? issuerId = receipt?.GetIssuerId();
                     if (issuerId != null)
                     {
                         if (SaveCard)
@@ -169,17 +193,27 @@ namespace MonerisTest.ViewModels
                     throw new Exception("Purchase Service is not available");
                 }
                 PurchaseData purchaseData = new PurchaseData
-                        (
-                            store_Id: AppConstants.STORE_ID,
-                            api_Token: AppConstants.API_TOKEN,
-                            token: token,
-                            order_Id: Guid.NewGuid().ToString(),
-                            amount: TotalAmount.ToString(),
-                            cust_Id: null
-                        );
+                       (
+                           store_Id: AppConstants.STORE_ID,
+                           api_Token: AppConstants.API_TOKEN,
+                           token: token,
+                           order_Id: Guid.NewGuid().ToString(),
+                           amount: TotalAmount.ToString(),
+                           cust_Id: purchaser.CustomerId
+                       );
                 Receipt? receipt = await purchaseService.Purchase(purchaseData);
-                await SavePurchaseData(receipt);
-                await convenienceFeeService?.ChargeConvenienceFee(1);
+                string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
+                if (errorMessage != null)
+                {
+                  //  await SaveFailedPurchaseData(receipt);
+                    await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
+                }
+                else
+                {
+                    await SavePurchaseData(receipt);
+                    await convenienceFeeService?.ChargeConvenienceFee(1);
+                }
+               
             }
             catch (Exception ex)
             {
@@ -324,7 +358,6 @@ namespace MonerisTest.ViewModels
                     if (permanentToken != null)
                     {
                         await AddPermanentToken(receipt);
-                        await CompletePurchase(permanentToken);
                     }
                     else
                     {
@@ -344,26 +377,8 @@ namespace MonerisTest.ViewModels
         private async Task AddPermanentToken(Receipt receipt)
         {
             string dataKey = receipt.GetDataKey();
-            string responseCode = receipt.GetResponseCode();
-            string message = receipt.GetMessage();
-            string transDate = receipt.GetTransDate();
-            string transTime = receipt.GetTransTime();
-            string complete = receipt.GetComplete();
-            string timedOut = receipt.GetTimedOut();
-            string resSuccess = receipt.GetResSuccess();
-            string paymentType = receipt.GetPaymentType();
-            string cardType = receipt.GetCardType();
-            string cust_ID = receipt.GetResDataCustId();
-            string phone = receipt.GetResDataPhone();
-            string email = receipt.GetResDataEmail();
-            string note = receipt.GetResDataNote();
             string maskedPan = receipt.GetResDataMaskedPan();
             string exp_Date = receipt.GetResDataExpdate();
-            string crypt_Type = receipt.GetResDataCryptType();
-            string avs_Street_Number = receipt.GetResDataAvsStreetNumber();
-            string avs_Street_Name = receipt.GetResDataAvsStreetName();
-            string avs_Zipcode = receipt.GetResDataAvsZipcode();
-
 
             PaymentCard paymentCard = new PaymentCard
             {
@@ -376,8 +391,9 @@ namespace MonerisTest.ViewModels
             {
                 purchaser.SavedPaymentCards.Add(paymentCard);
             });
-             
-            
+
+
+            await CompletePurchase(dataKey);
         }
     }
 }

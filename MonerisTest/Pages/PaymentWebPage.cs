@@ -1,13 +1,4 @@
 
-
-using Moneris;
-using MonerisTest.Messages;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace MonerisTest.Pages;
 
 public class PaymentWebPage : ContentPage
@@ -15,9 +6,7 @@ public class PaymentWebPage : ContentPage
     public PaymentWebPage(PaymentWebViewModel viewModel)
     {
         try
-        {
-
-            
+        {            
 
             HybridWebView.HybridWebView hybridWebView = new()
             {
@@ -29,13 +18,15 @@ public class PaymentWebPage : ContentPage
             CheckBox checkBox = new();
             checkBox.SetBinding(CheckBox.IsCheckedProperty, nameof(viewModel.SaveCard));
 
-           
+
             Content = new VerticalStackLayout
             {
                 Spacing = 20,
                 Margin = new Thickness(20, 30, 20, 0),
                 Children =
             {
+                    new ImageButton{ Source="close_black", HorizontalOptions=LayoutOptions.Start, WidthRequest=35, HeightRequest=35}.BindCommand(nameof(viewModel.CancelPaymentCommand)),
+
                  new Label{FontAttributes=FontAttributes.Bold,TextDecorations= TextDecorations.Underline, TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.CustomerName)).Margins(0,0,0,40),
 
                 hybridWebView,
@@ -114,7 +105,7 @@ public class PaymentWebPage : ContentPage
 
                 else if (!string.IsNullOrWhiteSpace(dataKey))
                 {
-                    // await Shell.Current.GoToAsync($"//PaymentPage?DataKey={monerisTokenResponse.Data_key}");
+                    
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
                         WeakReferenceMessenger.Default.Send(new TokenMessage(dataKey));
@@ -138,27 +129,27 @@ public class PaymentWebPage : ContentPage
           switch(item)
             {
                 case "940":
-                     errorMessage = "Invalid profile id (on tokenization request)";               
+                     errorMessage = "940 - Invalid profile id (on tokenization request)";               
                     break;
 
                 case "941":
-                     errorMessage = "Error generating token";
+                     errorMessage = "941 - Error generating token";
                     break;
 
                 case "942":
-                    errorMessage = "Invalid Profile ID, or source URL";
+                    errorMessage = "942 - Invalid Profile ID, or source URL";
                     break;
 
                 case "943":
-                   errorMessage = "Card data is invalid (not numeric, fails mod10, we will remove spaces)";
+                   errorMessage = "943 - Card data is invalid (not numeric, fails mod10, we will remove spaces)";
                     break;
 
                 case "944":
-                    errorMessage = "Invalid expiration date (mmyy, must be current month or in the future)";
+                    errorMessage = "944 - Invalid expiration date (mmyy, must be current month or in the future)";
                     break;
 
                 case "945":
-                    errorMessage = "Invalid CVD data (not 3-4 digits)";
+                    errorMessage = "945 - Invalid CVD data (not 3-4 digits)";
                     break;
             }
 

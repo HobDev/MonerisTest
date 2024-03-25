@@ -1,7 +1,5 @@
 ﻿
 
-using Moneris;
-
 namespace MonerisTest.Services.Implementations
 {
     public class ReceiptErrorMessageService : IReceiptErrorMessageService
@@ -12,7 +10,8 @@ namespace MonerisTest.Services.Implementations
         public async Task<string?> GetErrorMessage(Receipt receipt)
         {
 
-            string? errorMessage = null;
+            string? responseMessage = null;
+            string? iSOMessage = null;
 
             string complete = receipt.GetComplete();
             string timedOut = receipt.GetTimedOut();
@@ -32,30 +31,31 @@ namespace MonerisTest.Services.Implementations
                     // responseCode from 0 to 49 indicates the transaction was approved. responseCode from 50 to 999 indicates the transaction was declined
                     if (responseCodeInt >= 50 )
                     {
-                        errorMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
-                        if (errorMessage == string.Empty)
+                        responseMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
+                        if (responseMessage == string.Empty)
                         {
-                            errorMessage = await GetReferralResponseMessage(responseCode);
-                            if (errorMessage == string.Empty)
+                            responseMessage = await GetReferralResponseMessage(responseCode);
+                            if (responseMessage == string.Empty)
                             {
-                                errorMessage = await GetSystemErrorResponseMessage(responseCode);
-                                if (errorMessage == string.Empty)
+                                responseMessage = await GetSystemErrorResponseMessage(responseCode);
+                                if (responseMessage == string.Empty)
                                 {
-                                    errorMessage = await GetVisaResponseMessage(responseCode);
-                                    if (errorMessage == string.Empty)
+                                    responseMessage = await GetVisaResponseMessage(responseCode);
+                                    if (responseMessage == string.Empty)
                                     {
-                                        errorMessage = await GetMasterCardResponseMessage(responseCode);
+                                        responseMessage = await GetMasterCardResponseMessage(responseCode);
                                     }
                                 }
                             }
                         }
-                        if (errorMessage== string.Empty)
+                        if (responseMessage== string.Empty)
                         {
-                            errorMessage = receipt.GetMessage();
+                            responseMessage = receipt.GetMessage();
                         }
-                       
-                        return responseCode + " - " + errorMessage;
+                                               
                     }
+
+                    return $"ISO CODE: { iSOCode} , ISO MESSAGE: {iSOMessage} \n RESPONSE CODE: { responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
                 }
             }
 
@@ -69,31 +69,31 @@ namespace MonerisTest.Services.Implementations
                     return "null - transaction was not sent for authorization";
                 }
                
-                        errorMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
-                        if(errorMessage== string.Empty)
+                        responseMessage = await GetDeclinedResponseMessage(responseCode, iSOCode);
+                        if(responseMessage== string.Empty)
                         {                        
-                           errorMessage= await GetReferralResponseMessage(responseCode);
-                            if(errorMessage == string.Empty)
+                           responseMessage= await GetReferralResponseMessage(responseCode);
+                            if(responseMessage == string.Empty)
                             {
-                            errorMessage =await GetSystemErrorResponseMessage(responseCode);
-                               if(errorMessage == string.Empty)
+                            responseMessage =await GetSystemErrorResponseMessage(responseCode);
+                               if(responseMessage == string.Empty)
                                {
-                                  errorMessage =await GetVisaResponseMessage(responseCode);
-                                    if(errorMessage == string.Empty)
+                                  responseMessage =await GetVisaResponseMessage(responseCode);
+                                    if(responseMessage == string.Empty)
                             {
-                                        errorMessage =await  GetMasterCardResponseMessage(responseCode);
-                                         if(errorMessage == string.Empty)
+                                        responseMessage =await  GetMasterCardResponseMessage(responseCode);
+                                         if(responseMessage == string.Empty)
                                          {
-                                              errorMessage = await GetAmexResponseMessage(responseCode);
-                                               if(errorMessage == string.Empty)
+                                              responseMessage = await GetAmexResponseMessage(responseCode);
+                                               if(responseMessage == string.Empty)
                                     {
-                                                   errorMessage = await GetCreditCardResponseMessage(responseCode);
-                                                    if(errorMessage == string.Empty)
+                                                   responseMessage = await GetCreditCardResponseMessage(responseCode);
+                                                    if(responseMessage == string.Empty)
                                                     {
-                                                        errorMessage = await GetSystemDeclineResponseMessage(responseCode);
-                                                        if(errorMessage == string.Empty)
+                                                      //  responseMessage = await GetSystemDeclineResponseMessage(responseCode);
+                                                        if(responseMessage == string.Empty)
                                                         {
-                                                            errorMessage = await GetAdminResponseMessage(responseCode);
+                                                          //  responseMessage = await GetAdminResponseMessage(responseCode);
                                                         }
                                                     }
                                                }
@@ -103,16 +103,45 @@ namespace MonerisTest.Services.Implementations
                             }
                         }
 
-                       if (errorMessage == string.Empty)
+                       if (responseMessage == string.Empty)
                         {
-                            errorMessage = receipt.GetMessage();
+                            responseMessage = receipt.GetMessage();
                         }
-                      
-                        return responseCode + " - " + errorMessage;      
-                       
+
+                return $"ISO CODE: {iSOCode} , ISO MESSAGE: {iSOMessage} \n RESPONSE CODE: {responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
+
             }
 
-            return errorMessage;
+            return responseMessage;
+        }
+
+        //private async Task<string> GetAdminResponseMessage(string responseCode)
+        //{
+            
+        //}
+
+        //private async Task<string> GetSystemDeclineResponseMessage(string responseCode)
+        //{
+            
+        //}
+
+        private async Task<string> GetCreditCardResponseMessage(string responseCode)
+        {
+           if(responseCode=="408")
+            {
+                return "(CREDIT CARD - card use limited - refer to branch) declined";
+            }
+           else if(responseCode=="475")
+            {
+                 return "CREDIT CARD - invalid expiry date";
+            }
+           else if(responseCode=="476")
+            {
+                 return "CREDIT CARD - invalid expiry date";
+                }
+
+
+            return string.Empty;
         }
 
         private async Task<string> GetAmexResponseMessage(string responseCode)

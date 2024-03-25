@@ -1,12 +1,9 @@
-﻿
-
-
-namespace MonerisTest.Services.Implementations
+﻿namespace MonerisTest.Services.Implementations.Success
 {
     public class SendReceiptService : ISendReceiptService
     {
 
-       
+
         public async Task SendReceipt(TransactionRecordOfPurchase cardHolderTransactionRecord)
         {
 
@@ -16,6 +13,6 @@ namespace MonerisTest.Services.Implementations
             };
         }
 
-       
+
     }
 }

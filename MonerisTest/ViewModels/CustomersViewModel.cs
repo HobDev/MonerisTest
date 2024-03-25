@@ -1,9 +1,4 @@
 ﻿
-
-
-
-
-
 namespace MonerisTest.ViewModels
 {
     public partial class CustomersViewModel : ObservableObject

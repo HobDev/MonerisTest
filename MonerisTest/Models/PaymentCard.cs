@@ -1,7 +1,5 @@
 ﻿
 
-using Realms;
-
 namespace MonerisTest.Models
 {
     public partial class PaymentCard : IEmbeddedObject

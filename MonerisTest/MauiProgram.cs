@@ -1,8 +1,5 @@
 ﻿
 
-using CommunityToolkit.Maui;
-using Microsoft.Extensions.Options;
-
 namespace MonerisTest
 {
     public static class MauiProgram
@@ -34,6 +31,8 @@ namespace MonerisTest
             builder.Services.AddTransient<ReceiptsViewModel>();
             builder.Services.AddTransient<CancellationPage>();
             builder.Services.AddTransient<CancellationViewModel>();
+            builder.Services.AddTransient<FailedTransactionsPage>();
+            builder.Services.AddTransient<FailedTransactionsViewModel>();
 
 
 
@@ -54,6 +53,7 @@ namespace MonerisTest
             builder.Services.AddSingleton<IConvenienceFeeService, ConvenienceFeeService>();
             builder.Services.AddSingleton<IRefundService, RefundService>();
             builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
+            builder.Services.AddSingleton<ICardVerificationFailure, CardVerificationFailure>();
 
 
             return builder;
