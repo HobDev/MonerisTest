@@ -29,8 +29,6 @@ namespace MonerisTest.Models
         [Backlink(nameof(TransactionRecordOfPurchase.Customer))]
         public IQueryable<TransactionRecordOfPurchase> TransactionRecordOfPurchases { get; }
 
-        [Backlink(nameof(TransactionRecordOfConvenienceFee.Customer))]
-        public IQueryable<TransactionRecordOfConvenienceFee> TransactionRecordOfConvenienceFees { get; }
 
         [Backlink(nameof(TransactionRecordOfRefund.Customer))]
         public IQueryable<TransactionRecordOfRefund> TransactionRecordOfRefunds { get; }

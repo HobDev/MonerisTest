@@ -31,20 +31,18 @@ namespace MonerisTest.ViewModels
         private readonly ICardVerificationService? cardVerificationService;
         private readonly IPurchaseService? purchaseService;
         private readonly IAddTokenService? addTokenService;
-        private readonly IConvenienceFeeService? convenienceFeeService;
         private readonly IReceiptErrorMessageService? receiptErrorMessageService;
         private readonly ICardVerificationFailure? cardVerificationFailure; 
 
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService, IConvenienceFeeService convenienceFeeService, IReceiptErrorMessageService receiptErrorMessageService, ICardVerificationFailure cardVerificationFailure)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ICardVerificationFailure cardVerificationFailure)
         {
             try
             {
                 this.cardVerificationService = cardVerificationService;
                 this.purchaseService = purchaseService;
                 this.addTokenService = addTokenService;
-                this.convenienceFeeService = convenienceFeeService;
                 this.receiptErrorMessageService = receiptErrorMessageService;
                 this.cardVerificationFailure = cardVerificationFailure;
 
@@ -211,7 +209,7 @@ namespace MonerisTest.ViewModels
                 else
                 {
                     await SavePurchaseData(receipt);
-                    await convenienceFeeService?.ChargeConvenienceFee(1);
+                  
                 }
                
             }

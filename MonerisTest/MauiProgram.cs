@@ -50,7 +50,6 @@ namespace MonerisTest
             builder.Services.AddSingleton<ICardVerificationService, CardVerificationService>();
             builder.Services.AddSingleton<IAddTokenService, AddTokenService>();
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
-            builder.Services.AddSingleton<IConvenienceFeeService, ConvenienceFeeService>();
             builder.Services.AddSingleton<IRefundService, RefundService>();
             builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
             builder.Services.AddSingleton<ICardVerificationFailure, CardVerificationFailure>();

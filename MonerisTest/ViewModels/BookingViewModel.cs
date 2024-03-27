@@ -32,15 +32,15 @@ namespace MonerisTest
 
      
         private readonly IPurchaseService? purchaseService;
-        private readonly IConvenienceFeeService? convenienceFeeService;
+       
 
-        public BookingViewModel( IPurchaseService purchaseService, IConvenienceFeeService convenienceFeeService)
+        public BookingViewModel( IPurchaseService purchaseService)
         {
             try
             {
                
                 this.purchaseService = purchaseService;
-                this.convenienceFeeService = convenienceFeeService;
+              
                 realm= Realm.GetInstance();
 
                 TotalAmount = 1.00M;
@@ -99,7 +99,7 @@ namespace MonerisTest
                         );
                         Receipt? receipt = await purchaseService.Purchase(purchaseData);
                         await SavePurchaseData(receipt);
-                        await convenienceFeeService.ChargeConvenienceFee(TotalAmount);
+                       
                     }
 
                 }
