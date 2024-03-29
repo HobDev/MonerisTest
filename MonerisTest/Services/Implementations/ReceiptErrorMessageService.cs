@@ -44,6 +44,22 @@ namespace MonerisTest.Services.Implementations
                                     if (responseMessage == string.Empty)
                                     {
                                         responseMessage = await GetMasterCardResponseMessage(responseCode);
+                                        if (responseMessage == string.Empty)
+                                        {
+                                            responseMessage = await GetAmexResponseMessage(responseCode);
+                                            if (responseMessage == string.Empty)
+                                            {
+                                                responseMessage = await GetCreditCardResponseMessage(responseCode);
+                                                if (responseMessage == string.Empty)
+                                                {
+                                                    //  responseMessage = await GetSystemDeclineResponseMessage(responseCode);
+                                                    if (responseMessage == string.Empty)
+                                                    {
+                                                        //  responseMessage = await GetAdminResponseMessage(responseCode);
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -55,7 +71,7 @@ namespace MonerisTest.Services.Implementations
                                                
                     }
 
-                    return $"ISO CODE: { iSOCode} , ISO MESSAGE: {iSOMessage} \n RESPONSE CODE: { responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
+                    return $"ISO CODE: { iSOCode} , ISO MESSAGE: {iSOMessage}\nRESPONSE CODE: { responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
                 }
             }
 
@@ -80,13 +96,13 @@ namespace MonerisTest.Services.Implementations
                                {
                                   responseMessage =await GetVisaResponseMessage(responseCode);
                                     if(responseMessage == string.Empty)
-                            {
+                                    {
                                         responseMessage =await  GetMasterCardResponseMessage(responseCode);
                                          if(responseMessage == string.Empty)
                                          {
                                               responseMessage = await GetAmexResponseMessage(responseCode);
                                                if(responseMessage == string.Empty)
-                                    {
+                                               {
                                                    responseMessage = await GetCreditCardResponseMessage(responseCode);
                                                     if(responseMessage == string.Empty)
                                                     {
@@ -108,7 +124,7 @@ namespace MonerisTest.Services.Implementations
                             responseMessage = receipt.GetMessage();
                         }
 
-                return $"ISO CODE: {iSOCode} , ISO MESSAGE: {iSOMessage} \n RESPONSE CODE: {responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
+                return $"ISO CODE: {iSOCode} , ISO MESSAGE: {iSOMessage}\nRESPONSE CODE: {responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
 
             }
 

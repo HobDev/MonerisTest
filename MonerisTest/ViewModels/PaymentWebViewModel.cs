@@ -1,8 +1,6 @@
 ﻿
 
 
-using MonerisTest.Models.Failure;
-using MonerisTest.Services.Implementations.Failure;
 
 namespace MonerisTest.ViewModels
 {
@@ -32,11 +30,11 @@ namespace MonerisTest.ViewModels
         private readonly IPurchaseService? purchaseService;
         private readonly IAddTokenService? addTokenService;
         private readonly IReceiptErrorMessageService? receiptErrorMessageService;
-        private readonly ICardVerificationFailure? cardVerificationFailure; 
-
+        private readonly ITransactionFailureService? cardVerificationFailure; 
+        private readonly ITransactionFailureService? transactionFailureService;
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ICardVerificationFailure cardVerificationFailure)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService cardVerificationFailure, ITransactionFailureService transactionFailureService)
         {
             try
             {
@@ -45,6 +43,7 @@ namespace MonerisTest.ViewModels
                 this.addTokenService = addTokenService;
                 this.receiptErrorMessageService = receiptErrorMessageService;
                 this.cardVerificationFailure = cardVerificationFailure;
+                this.transactionFailureService = transactionFailureService;
 
                 realm= Realm.GetInstance();
 
@@ -73,15 +72,10 @@ namespace MonerisTest.ViewModels
                         {
 
                             Dictionary<string, object> errorDictionary = new Dictionary<string, object> {{ "customerId", purchaser.CustomerId }, { "errorMessage", message.Value } };
+
+                            await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, message.Value, (int)TransactionType.Tokenization);
                             await Shell.Current.GoToAsync(nameof(BookingPage), errorDictionary);
-                          await realm.WriteAsync(async ()=>
-                          {
-                                realm.Add(new RecordOfFailedTokenization
-                                (
-                                    customerId : purchaser.CustomerId,
-                                    errorMessage : message.Value
-                                ));
-                          });
+                         
                         }
                     });
                 });
@@ -154,7 +148,7 @@ namespace MonerisTest.ViewModels
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
-                    await cardVerificationFailure.SaveFailedCardVerificationData(receipt);
+                    await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId,errorMessage, (int)TransactionType.CardVerification);
                     await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
                 }
                 else
@@ -203,7 +197,7 @@ namespace MonerisTest.ViewModels
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
-                  //  await SaveFailedPurchaseData(receipt);
+                    await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
                     await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
                 }
                 else
@@ -352,15 +346,25 @@ namespace MonerisTest.ViewModels
                         throw new Exception("Add Token Service is not available");
                     }
                      Receipt? receipt= await addTokenService.SaveTokenToVault(issuerId, tempToken);
-                    permanentToken = receipt?.GetDataKey();
-                    if (permanentToken != null)
+                    string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
+                    if (errorMessage != null)
                     {
-                        await AddPermanentToken(receipt);
+                        await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.PermanentToken);
+                        await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
                     }
                     else
                     {
-                        await CompletePurchase(tempToken);
+                        permanentToken = receipt?.GetDataKey();
+                        if (permanentToken != null)
+                        {
+                            await AddPermanentToken(receipt);
+                        }
+                        else
+                        {
+                            await CompletePurchase(tempToken);
+                        }
                     }
+                   
                 }
             }
             catch (Exception ex)

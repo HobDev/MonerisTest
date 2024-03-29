@@ -69,8 +69,6 @@
 
     <ItemGroup>
       <Folder Include="DataAccessLayer\" />
-      <Folder Include="Services\Implementations\Success\" />
-      <Folder Include="Services\Interfaces\Success\" />
     </ItemGroup>
 
 

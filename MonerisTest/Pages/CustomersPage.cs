@@ -9,10 +9,11 @@ public class CustomersPage : ContentPage
 		try
 		{
             this.viewModel = viewModel;
-            Content = new VerticalStackLayout
-            {
-                Margin = new Thickness(20),
-                Children =
+           
+                Content = new VerticalStackLayout
+                {
+                    Margin = new Thickness(20),
+                    Children =
                 {
                    new Label{Text="Customers",TextDecorations= TextDecorations.Underline,FontAttributes=FontAttributes.Bold, TextColor=Colors.Black, FontSize=20, HorizontalOptions=LayoutOptions.Center}.Margins(0,0,0,40),
                    new CollectionView
@@ -21,7 +22,7 @@ public class CustomersPage : ContentPage
                        {
                            ItemSpacing=10
                        },
-                      
+
                        ItemTemplate= new DataTemplate(()=> new Button
                        {
                            TextColor=Colors.Black ,
@@ -30,10 +31,11 @@ public class CustomersPage : ContentPage
                        }.Bind(Button.TextProperty, nameof(Customer.Name)).BindCommand(nameof(viewModel.CustomerSelectedCommand), source:viewModel)),
 
 
-                   }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.Customers)),   
+                   }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.Customers)),
+
                 }
-            
-            };
+        };
+           
 
 			BindingContext = viewModel;
 

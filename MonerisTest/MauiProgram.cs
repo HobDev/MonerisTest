@@ -1,6 +1,4 @@
-﻿
-
-namespace MonerisTest
+﻿namespace MonerisTest
 {
     public static class MauiProgram
     {
@@ -52,7 +50,7 @@ namespace MonerisTest
             builder.Services.AddSingleton<IPurchaseService, PurchaseService>();
             builder.Services.AddSingleton<IRefundService, RefundService>();
             builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
-            builder.Services.AddSingleton<ICardVerificationFailure, CardVerificationFailure>();
+            builder.Services.AddSingleton<ITransactionFailureService, TransactionFailureService>();
 
 
             return builder;
