@@ -95,9 +95,9 @@ public class PaymentWebPage : ContentPage
                                     }
                             }
 
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        WeakReferenceMessenger.Default.Send(new ErrorMessage(message));
+                         WeakReferenceMessenger.Default.Send(new ErrorMessage(message));
                     });
                 }
 
@@ -106,7 +106,7 @@ public class PaymentWebPage : ContentPage
                 else if (!string.IsNullOrWhiteSpace(dataKey))
                 {
                     
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
                         WeakReferenceMessenger.Default.Send(new TokenMessage(dataKey));
                     });
