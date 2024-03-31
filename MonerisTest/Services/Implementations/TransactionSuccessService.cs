@@ -4,7 +4,7 @@ namespace MonerisTest.Services.Implementations
 {
     public class TransactionSuccessService : ITransactionSuccessService
     {
-        public async Task SaveSuccessfulTransactionData(Receipt receipt)
+        public async Task<string?> SaveSuccessfulTransactionData(Receipt receipt)
         {
             string TransactionType = receipt.GetTransType(); 
             string TransactionDate = receipt.GetTransDate();
@@ -23,8 +23,7 @@ namespace MonerisTest.Services.Implementations
             
 
             RecordOfSuccessfulTransaction recordOfSucessfulTransaction = new RecordOfSuccessfulTransaction
-                (
-                 
+                (       
             transactionType: TransactionType,
             orderNumber: string.Empty,
             transactionDate: DateTimeOffset.Parse(TransactionDate + " " + TransactionTime),
@@ -40,6 +39,16 @@ namespace MonerisTest.Services.Implementations
             buyer: null
          
                 );
+
+
+            //save to database
+            Realm realm = Realm.GetInstance();
+            await realm.WriteAsync(() =>
+            {
+                realm.Add(recordOfSucessfulTransaction);
+            });
+
+            return recordOfSucessfulTransaction.Id;
              
         }
     }

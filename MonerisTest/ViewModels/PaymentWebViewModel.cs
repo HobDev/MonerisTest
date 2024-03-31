@@ -30,9 +30,11 @@ namespace MonerisTest.ViewModels
         private readonly IReceiptErrorMessageService? receiptErrorMessageService;
         private readonly ITransactionFailureService? cardVerificationFailure; 
         private readonly ITransactionFailureService? transactionFailureService;
+        private readonly ITransactionSuccessService? transactionSuccessService;
+        private readonly IEmailReceiptService? sendReceiptService;
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService cardVerificationFailure, ITransactionFailureService transactionFailureService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService cardVerificationFailure, ITransactionFailureService transactionFailureService, ITransactionSuccessService transactionSuccessService, IEmailReceiptService sendReceiptService)
         {
             try
             {
@@ -42,6 +44,8 @@ namespace MonerisTest.ViewModels
                 this.receiptErrorMessageService = receiptErrorMessageService;
                 this.cardVerificationFailure = cardVerificationFailure;
                 this.transactionFailureService = transactionFailureService;
+                this.transactionSuccessService = transactionSuccessService;
+                this.sendReceiptService = sendReceiptService;
 
                 realm= Realm.GetInstance();
 
@@ -200,7 +204,8 @@ namespace MonerisTest.ViewModels
                 }
                 else
                 {
-                    await SavePurchaseData(receipt);
+                  string? receiptId=  await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
+                    
                   
                 }
                
@@ -213,125 +218,7 @@ namespace MonerisTest.ViewModels
           
         }
 
-        private async Task SavePurchaseData(Receipt? receipt)
-        {
-            if (receipt == null)
-            {
-                return;
-            }
-            // Save the receipt data to the database
-            string? dataKey = receipt.GetDataKey();
-            string? resSuccess = receipt.GetResSuccess();
-            string? paymentType = receipt.GetPaymentType();
-            string? cust_ID = receipt.GetResCustId();
-            string? phone = receipt.GetResPhone(); 
-            string? email = receipt.GetResEmail();
-            string? note = receipt.GetResNote();
-            string? masked_Pan = receipt.GetResMaskedPan();
-            string? exp_Date = receipt.GetResExpDate();
-            string? crypt_Type = receipt.GetResCryptType();
-            string? avs_Street_Number = receipt.GetResAvsStreetNumber();
-            string? avs_Street_Name = receipt.GetResAvsStreetName();
-            string? avs_Zipcode = receipt.GetResAvsZipcode();
-
-
-
-            string? receiptId = receipt.GetReceiptId();
-            string? referenceNum = receipt.GetReferenceNum();
-            string? responseCode = receipt.GetResponseCode();
-            string? authCode = receipt.GetAuthCode();
-            string? cardBrand = receipt.GetCardBrand();
-            string? brandName=receipt.GetCardBrandName();    
-            string? isoCode = receipt.GetISO();
-            string? message = receipt.GetMessage();
-            string? transDate = receipt.GetTransDate();
-            string? transTime = receipt.GetTransTime();
-            string? transType = receipt.GetTransType();
-            string? Complete = receipt.GetComplete();
-            string? transAmount = receipt.GetTransAmount();
-            string? cardType = receipt.GetCardType();
-            string? txnNumber = receipt.GetTxnNumber();
-            string? timedOut = receipt.GetTimedOut();
-
-            string? CardTypeValue=string.Empty;
-          switch (cardType)
-            {
-                case "V":
-                    CardTypeValue = "Visa";
-                    break;
-                    case "M":
-                    CardTypeValue = "MasterCard";
-                    break;
-                    case "AX": 
-                    CardTypeValue = "American Express";
-                    break;
-                    case "DC":
-                    CardTypeValue = "Diners Club";
-                    break;
-                    case "NO":
-                    CardTypeValue = "Novus/Discover";
-                      break;
-                    case "SE":
-                    CardTypeValue = "Sears";
-                    break;
-                    case "D":
-                    CardTypeValue = "Debit";
-                    break;
-                    case "C1":
-                    CardTypeValue = "JCB";
-                    break;
-            }
-
-            string? transTypeValue = string.Empty;  
-
-            switch(transType)
-            {
-                case "0":
-                    transTypeValue = "Purchase";
-                    break; 
-                    case "1":
-                    transTypeValue = "Pre-Authorization";
-                    break;
-                    case "2":
-                    transTypeValue = "Completion";
-                    break;
-                    case "4":
-                    transTypeValue = "Refund";
-                    break;
-                    case "11":
-                    transTypeValue = "Void";
-                    break;
-            }
-          
-
-
-            decimal amount = decimal.TryParse(transAmount, out decimal TotalAmount) ? TotalAmount : 0;
-            // convert string to datetime offset
-            DateTimeOffset transDateOffset = DateTimeOffset.TryParse(transDate, out DateTimeOffset result) ? result : DateTimeOffset.Now;
-
-            PaymentReceipt transactionReceipt = new PaymentReceipt
-            (
-               transactionType:transType,
-            orderNumber:receiptId,
-            transaction_DateTime:transDateOffset,
-        authorizationNumber:authCode,
-        referenceNumber:referenceNum,
-        iSOCode:isoCode,
-        responseCode:responseCode,
-            goods_Description:string.Empty,
-             amount:amount,
-           currency_Code:string.Empty,
-            cardHolderName:Purchaser?.Name,  
-           cardHolderAddress:string.Empty,
-             purchaser:Purchaser,
-
-             // not part of the receipt
-             transactionNumber:txnNumber,
-             cardType:CardTypeValue
-            );
-         
-           
-        }
+       
 
         async Task GetPermanentToken(string issuerId)
         {
