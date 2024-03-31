@@ -30,8 +30,8 @@ namespace MonerisTest.Models
         public IQueryable<TransactionRecordOfPurchase> TransactionRecordOfPurchases { get; }
 
 
-        [Backlink(nameof(TransactionRecordOfRefund.Customer))]
-        public IQueryable<TransactionRecordOfRefund> TransactionRecordOfRefunds { get; }
+        [Backlink(nameof(RecordOfSuccessfulTransaction.Customer))]
+        public IQueryable<RecordOfSuccessfulTransaction> TransactionRecordOfRefunds { get; }
        
     }
 }

@@ -31,6 +31,8 @@
             builder.Services.AddTransient<CancellationViewModel>();
             builder.Services.AddTransient<FailedTransactionsPage>();
             builder.Services.AddTransient<FailedTransactionsViewModel>();
+            builder.Services.AddTransient<ReceiptDetailPage>();
+            builder.Services.AddTransient<ReceiptDetailViewModel>();
 
 
 

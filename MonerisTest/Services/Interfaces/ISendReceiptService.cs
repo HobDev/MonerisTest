@@ -7,7 +7,7 @@ namespace MonerisTest.Services.Interfaces
     public interface ISendReceiptService
     {
 
-        Task SendReceipt(TransactionRecordOfPurchase cardHolderTransactionRecord);
+        Task SendReceipt(RecordOfSuccessfulTransaction recordOfSuccessfulTransaction);
 
     }
 }

@@ -1,7 +1,5 @@
 ﻿
 
-
-
 namespace MonerisTest.ViewModels
 {
     public partial class PaymentWebViewModel: ObservableObject, IQueryAttributable

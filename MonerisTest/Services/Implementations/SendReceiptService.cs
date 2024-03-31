@@ -4,13 +4,13 @@
     {
 
 
-        public async Task SendReceipt(TransactionRecordOfPurchase cardHolderTransactionRecord)
+        public async Task SendReceipt(RecordOfSuccessfulTransaction recordOfSuccessfulTransaction)
         {
 
-            PaymentReceipt cardHolderReceipt = new()
-            {
+           RecordOfSuccessfulTransaction record = new RecordOfSuccessfulTransaction(recordOfSuccessfulTransaction);
 
-            };
+            // send receipt to customer
+          //  await SendEmailReceipt(record);
         }
 
 
