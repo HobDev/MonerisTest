@@ -28,13 +28,12 @@ namespace MonerisTest.ViewModels
         private readonly IPurchaseService? purchaseService;
         private readonly IAddTokenService? addTokenService;
         private readonly IReceiptErrorMessageService? receiptErrorMessageService;
-        private readonly ITransactionFailureService? cardVerificationFailure; 
         private readonly ITransactionFailureService? transactionFailureService;
         private readonly ITransactionSuccessService? transactionSuccessService;
-        private readonly IEmailReceiptService? sendReceiptService;
+       
        
 
-        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService cardVerificationFailure, ITransactionFailureService transactionFailureService, ITransactionSuccessService transactionSuccessService, IEmailReceiptService sendReceiptService)
+        public PaymentWebViewModel(ICardVerificationService cardVerificationService, IPurchaseService purchaseService, IAddTokenService addTokenService,  IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService transactionFailureService, ITransactionSuccessService transactionSuccessService)
         {
             try
             {
@@ -42,10 +41,9 @@ namespace MonerisTest.ViewModels
                 this.purchaseService = purchaseService;
                 this.addTokenService = addTokenService;
                 this.receiptErrorMessageService = receiptErrorMessageService;
-                this.cardVerificationFailure = cardVerificationFailure;
                 this.transactionFailureService = transactionFailureService;
                 this.transactionSuccessService = transactionSuccessService;
-                this.sendReceiptService = sendReceiptService;
+               
 
                 realm= Realm.GetInstance();
 
@@ -143,15 +141,13 @@ namespace MonerisTest.ViewModels
                     throw new Exception("Temporary Token is not available");
                 }
 
-                // Receipt? receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
-
-                Receipt? receipt = await cardVerificationService.VerifyPaymentCard("hello");
+              Receipt? receipt= await cardVerificationService.VerifyPaymentCard(tempToken);
 
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
                     await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId,errorMessage, (int)TransactionType.CardVerification);
-                    await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
+                    await Shell.Current.DisplayAlert("Card Verification Failed", errorMessage, "OK");
                 }
                 else
                 {
@@ -200,12 +196,19 @@ namespace MonerisTest.ViewModels
                 if (errorMessage != null)
                 {
                     await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
-                    await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
+                    await Shell.Current.DisplayAlert("Purchase failed", errorMessage, "OK");
                 }
                 else
                 {
-                  string? receiptId=  await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
-                    
+                  string? transactionId=  await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
+                    if(transactionId!=null)
+                    {
+                       
+                        await Shell.Current.DisplayAlert("Payment Successful", " you will get the receipt in an email soon", "OK");
+                       Dictionary<string, object> query= new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "transactionId", transactionId } };
+                        await Shell.Current.GoToAsync(nameof(TransactionDetailPage), query);
+                    }
+                
                   
                 }
                
@@ -235,7 +238,7 @@ namespace MonerisTest.ViewModels
                     if (errorMessage != null)
                     {
                         await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.PermanentToken);
-                        await Shell.Current.DisplayAlert("Declined", errorMessage, "OK");
+                        await CompletePurchase(tempToken);
                     }
                     else
                     {
@@ -268,12 +271,12 @@ namespace MonerisTest.ViewModels
             string exp_Date = receipt.GetResDataExpdate();
 
             PaymentCard paymentCard = new PaymentCard
-            {
-                PermanentToken = dataKey,
-                MaskedCardNumber = maskedPan,
-                CardExpiryDate= exp_Date,
+            (
+                permanentToken: dataKey,
+                maskedCardNumber : maskedPan,
+                cardExpiryDate: exp_Date
                
-            };
+            );
             realm.Write(() =>
             {
                 purchaser.SavedPaymentCards.Add(paymentCard);

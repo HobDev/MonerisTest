@@ -32,14 +32,20 @@ namespace MonerisTest
 
      
         private readonly IPurchaseService? purchaseService;
-       
+        private readonly IReceiptErrorMessageService? receiptErrorMessageService;
+        private readonly ITransactionFailureService? transactionFailureService;
+        private readonly ITransactionSuccessService? transactionSuccessService;
 
-        public BookingViewModel( IPurchaseService purchaseService)
+
+        public BookingViewModel( IPurchaseService purchaseService, IReceiptErrorMessageService receiptErrorMessageService, ITransactionFailureService transactionFailureService, ITransactionSuccessService transactionSuccessService)
         {
             try
             {
                
                 this.purchaseService = purchaseService;
+                this.receiptErrorMessageService = receiptErrorMessageService;
+                this.transactionFailureService = transactionFailureService;
+                this.transactionSuccessService = transactionSuccessService;
               
                 realm= Realm.GetInstance();
 
@@ -75,81 +81,55 @@ namespace MonerisTest
         {
             try
             {
-
-
-                if (SelectedCard == null)
+                if(SelectedCard!=null)
                 {
-                    Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "amount", TotalAmount } };
-                    await Shell.Current.GoToAsync($"{nameof(PaymentWebPage)}", query);
-                }
+                    if (purchaseService == null)
+                    {
+                        throw new Exception("Purchase Service is not available");
+                    }
+                    PurchaseData purchaseData = new PurchaseData
+                           (
+                               store_Id: AppConstants.STORE_ID,
+                               api_Token: AppConstants.API_TOKEN,
+                               token: SelectedCard.PermanentToken,
+                               order_Id: Guid.NewGuid().ToString(),
+                               amount: TotalAmount.ToString(),
+                               cust_Id: purchaser.CustomerId
+                           );
+                    Receipt? receipt = await purchaseService.Purchase(purchaseData);
+                    string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
+                    if (errorMessage != null)
+                    {
+                        await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
+                        await Shell.Current.DisplayAlert("Purchase failed", errorMessage, "OK");
+                    }
+                    else
+                    {
+                        string? transactionId = await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
+                        if (transactionId != null)
+                        {
+
+                            await Shell.Current.DisplayAlert("Payment Successful", " you will get the receipt in an email soon", "OK");
+                            Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "transactionId", transactionId } };
+                            await Shell.Current.GoToAsync(nameof(TransactionDetailPage), query);
+                        }
+                    }
+                } 
                 else
                 {
-                    // Make a payment using the permanent token
-                    string? token = SelectedCard.PermanentToken;
-                    if (!string.IsNullOrWhiteSpace(token))
-                    {
-                        PurchaseData purchaseData = new PurchaseData
-                        (
-                            store_Id: AppConstants.STORE_ID,
-                            api_Token: AppConstants.API_TOKEN,
-                            token: token,
-                            order_Id: Guid.NewGuid().ToString(),
-                            amount: TotalAmount.ToString(),
-                            cust_Id: null
-                        );
-                        Receipt? receipt = await purchaseService.Purchase(purchaseData);
-                        await SavePurchaseData(receipt);
-                       
-                    }
-
+                    IDictionary<string, object> query= new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "amount", TotalAmount.ToString()} };
+                    await Shell.Current.GoToAsync(nameof(PaymentWebPage));
                 }
-
+                
             }
             catch (Exception ex)
             {
 
-               await Shell.Current.DisplayAlert("Error", ex.Message, "Ok");
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
             }
-           
         }
 
-        private async Task SavePurchaseData(Receipt receipt)
-        {
-            if(receipt==null)
-            {
-                return;
-            }
-            // Save the receipt data to the database
-            string? dataKey = receipt.GetDataKey();
-            string? receiptId = receipt.GetReceiptId();
-            string? referenceNum = receipt.GetReferenceNum();
-            string? responseCode = receipt.GetResponseCode();
-            string? authCode = receipt.GetAuthCode();
-            string? message = receipt.GetMessage();
-            string? transDate = receipt.GetTransDate();
-            string? transTime = receipt.GetTransTime();
-            string? transType = receipt.GetTransType();
-            string? Complete = receipt.GetComplete();
-            string? transAmount = receipt.GetTransAmount();
-            string? cardType = receipt.GetCardType();
-            string? txnNumber = receipt.GetTxnNumber();
-            string? timedOut = receipt.GetTimedOut();
-            string? resSuccess = receipt.GetResSuccess();
-            string? paymentType = receipt.GetPaymentType();
-            string? isVisaDebit = receipt.GetIsVisaDebit();
-            string? issuerId = receipt.GetIssuerId();
-
-            string? cust_ID = receipt.GetResDataCustId();
-            string? phone = receipt.GetResDataPhone();
-            string? email = receipt.GetResDataEmail();
-            string? note = receipt.GetResDataNote();
-            string? masked_Pan = receipt.GetResDataMaskedPan();
-            string? exp_Date = receipt.GetResDataExpdate();
-            string? crypt_Type = receipt.GetResDataCryptType();
-            string? avs_Street_Number = receipt.GetResDataAvsStreetNumber();
-            string? avs_Street_Name = receipt.GetResDataAvsStreetName();
-            string? avs_Zipcode = receipt.GetResDataAvsZipcode();
-        }
+      
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -169,7 +149,7 @@ namespace MonerisTest
             {
                 if (message is string errorMessage)
                 {
-                    await Shell.Current.DisplayAlert("Error", errorMessage, "Ok");
+                    await Shell.Current.DisplayAlert("Error in creating temporary token", errorMessage, "Ok");
                 }
             }
 

@@ -31,8 +31,8 @@
             builder.Services.AddTransient<CancellationViewModel>();
             builder.Services.AddTransient<FailedTransactionsPage>();
             builder.Services.AddTransient<FailedTransactionsViewModel>();
-            builder.Services.AddTransient<ReceiptDetailPage>();
-            builder.Services.AddTransient<ReceiptDetailViewModel>();
+            builder.Services.AddTransient<TransactionDetailPage>();
+            builder.Services.AddTransient<TransactionDetailViewModel>();
 
 
 
@@ -53,6 +53,7 @@
             builder.Services.AddSingleton<IRefundService, RefundService>();
             builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
             builder.Services.AddSingleton<ITransactionFailureService, TransactionFailureService>();
+            builder.Services.AddSingleton<ITransactionSuccessService, TransactionSuccessService>();
 
 
             return builder;

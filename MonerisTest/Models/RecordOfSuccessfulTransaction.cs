@@ -35,7 +35,7 @@ namespace MonerisTest.Models
         public string MerchantName { get; set; } = "Daflo Innovation Inc.";
 
         // postal address of the Merchant   
-        public string StroreAddress { get; set; } = "117 Vanier Street\r\nWhitby\r\nL1R 3J8";
+        public string StoreAddress { get; set; } = "117 Vanier Street\r\nWhitby\r\nL1R 3J8";
 
         // web address of the Merchant
         public string MerchantUrl { get; set; } = "https://www.dafloinnovations.com";

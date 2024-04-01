@@ -23,15 +23,12 @@ namespace MonerisTest.Models
         public IList<PaymentCard> SavedPaymentCards { get;}
 
         // backlinks 
-        [Backlink(nameof(PaymentReceipt.Purchaser))]
-        public IQueryable<PaymentReceipt> PaymentReceipts { get; }
 
-        [Backlink(nameof(TransactionRecordOfPurchase.Customer))]
-        public IQueryable<TransactionRecordOfPurchase> TransactionRecordOfPurchases { get; }
+        [Backlink(nameof(RecordOfSuccessfulTransaction.Buyer))]
+        public IQueryable<RecordOfSuccessfulTransaction> RecordOfScuccessfulTransactions { get; }
 
 
-        [Backlink(nameof(RecordOfSuccessfulTransaction.Customer))]
-        public IQueryable<RecordOfSuccessfulTransaction> TransactionRecordOfRefunds { get; }
+       
        
     }
 }
