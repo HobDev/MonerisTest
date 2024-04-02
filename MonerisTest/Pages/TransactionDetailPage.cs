@@ -51,12 +51,26 @@ public class TransactionDetailPage : ContentPage
 
 					new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.Transaction_DateTime)}", stringFormat:"Date/Time: {0}").Row(ReceiptRows.DateTimeAndApprovalCode).Column(ReceiptColumns.First),
 
-					new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ReferenceNumber)}", stringFormat:"Reference Number: {0}").Row(ReceiptRows.DateTimeAndApprovalCode).Column(ReceiptColumns.Second),
 
-					new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.AuthorizationNumber)}", stringFormat:"Approval Code: {0}").Row(ReceiptRows.DateTimeAndApprovalCode).Column(ReceiptColumns.Second),
+                    new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.AuthorizationNumber)}", stringFormat:"Approval Code: {0}").Row(ReceiptRows.DateTimeAndApprovalCode).Column(ReceiptColumns.Second),
 
-					new Label { FontSize = 15 }.Bind(Label.TextProperty,binding1:new Binding( $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ResponseCode)}"),binding2: new Binding( $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ISOCode)}"), convert:((string? response, string? iso) values)=>$"Response/ISO Code: {values.response}/{values.iso}" ).Row(ReceiptRows.ReferenceNumberAndResponseISoCode).Column(ReceiptColumns.First),
+                    new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ReferenceNumber)}", stringFormat:"Reference Number: {0}").Row(ReceiptRows.ReferenceNumberAndResponseISoCode).Column(ReceiptColumns.First),
 
+					new Label { FontSize = 15 }.Bind(Label.TextProperty,binding1:new Binding( $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ResponseCode)}"),binding2: new Binding( $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.ISOCode)}"), convert:((string? response, string? iso) values)=>$"Response/ISO Code: {values.response}/{values.iso}" ).Row(ReceiptRows.ReferenceNumberAndResponseISoCode).Column(ReceiptColumns.Second),
+
+					new Label {Text="Item Information", FontSize = 15, FontAttributes = FontAttributes.Bold }.Row(ReceiptRows.ItemsInformation).Column(ReceiptColumns.First).ColumnSpan(2),	
+					
+					new Label {Text="Service Description here", FontSize = 15 }.Bind(Label.TextProperty,$"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.Goods_Description)}").Row(ReceiptRows.ServiceInfo).Column(ReceiptColumns.First).ColumnSpan(2),
+
+					new Label {Text="Customer Information", FontSize = 15, FontAttributes = FontAttributes.Bold }.Row(ReceiptRows.CustomerInformation).Column(ReceiptColumns.First).ColumnSpan(2),
+
+					new Label {Text="Bill To", FontSize = 15, FontAttributes = FontAttributes.Bold }.Row(ReceiptRows.BillTo).Column(ReceiptColumns.First),
+
+					new Label { FontSize = 15, FontAttributes = FontAttributes.Bold }.Bind(Label.TextProperty, $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.CardHolderAddress)}").Row(ReceiptRows.BillToAddress).Column(ReceiptColumns.First),
+
+					new Label {Text="RETURNS AND REFUND POLICY", FontSize = 15, FontAttributes = FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center }.Row(ReceiptRows.ReturnAndRefundPolicy).Column(ReceiptColumns.First).ColumnSpan(2),
+
+					new Label { FontSize = 15, HorizontalOptions=LayoutOptions.Center }.Bind(Label.TextProperty, $"{nameof(viewModel.BookingInvoice)}.{nameof(viewModel.BookingInvoice.Restrictions)}").Row(ReceiptRows.ReturnAndRefundPolicyDetails).Column(ReceiptColumns.First).ColumnSpan(2)
 
 				}
             }
