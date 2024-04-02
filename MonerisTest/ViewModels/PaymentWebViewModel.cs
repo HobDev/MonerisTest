@@ -14,7 +14,7 @@ namespace MonerisTest.ViewModels
         bool saveCard;
 
         [ObservableProperty]
-        decimal totalAmount;
+        string totalAmount;
 
         string? tempToken;
      
@@ -71,9 +71,9 @@ namespace MonerisTest.ViewModels
                         if (!string.IsNullOrWhiteSpace(message.Value))
                         {
 
-                            Dictionary<string, object> errorDictionary = new Dictionary<string, object> {{ "customerId", purchaser.CustomerId }, { "errorMessage", message.Value } };
+                            Dictionary<string, object> errorDictionary = new Dictionary<string, object> {{ "customerId", Purchaser.CustomerId }, { "errorMessage", message.Value } };
 
-                            await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, message.Value, (int)TransactionType.Tokenization);
+                            await transactionFailureService.SaveFailedTransactionData(Purchaser.CustomerId, message.Value, (int)TransactionType.Tokenization);
                             await Shell.Current.GoToAsync(nameof(BookingPage), errorDictionary);
                          
                         }
@@ -95,7 +95,7 @@ namespace MonerisTest.ViewModels
         {
             try
             {
-                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", purchaser.CustomerId } };
+                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", Purchaser.CustomerId } };
                 await Shell.Current.GoToAsync($"{nameof(BookingPage)}", query);
             }
             catch (Exception ex)
@@ -120,7 +120,7 @@ namespace MonerisTest.ViewModels
             }
             if(query.TryGetValue("amount", out object? secondValue))
             {
-                if(secondValue is decimal amount)
+                if(secondValue is string amount)
                 {
                     TotalAmount = amount;
                 }
@@ -146,7 +146,7 @@ namespace MonerisTest.ViewModels
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
-                    await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId,errorMessage, (int)TransactionType.CardVerification);
+                    await transactionFailureService.SaveFailedTransactionData(Purchaser.CustomerId,errorMessage, (int)TransactionType.CardVerification);
                     await Shell.Current.DisplayAlert("Card Verification Failed", errorMessage, "OK");
                 }
                 else
@@ -189,23 +189,23 @@ namespace MonerisTest.ViewModels
                            token: token,
                            order_Id: Guid.NewGuid().ToString(),
                            amount: TotalAmount.ToString(),
-                           cust_Id: purchaser.CustomerId
+                           cust_Id: Purchaser.CustomerId
                        );
                 Receipt? receipt = await purchaseService.Purchase(purchaseData);
                 string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                 if (errorMessage != null)
                 {
-                    await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
+                    await transactionFailureService.SaveFailedTransactionData(Purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
                     await Shell.Current.DisplayAlert("Purchase failed", errorMessage, "OK");
                 }
                 else
                 {
-                  string? transactionId=  await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
+                  string? transactionId=  await transactionSuccessService.SaveSuccessfulTransactionData(receipt, Purchaser);
                     if(transactionId!=null)
                     {
                        
                         await Shell.Current.DisplayAlert("Payment Successful", " you will get the receipt in an email soon", "OK");
-                       Dictionary<string, object> query= new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "transactionId", transactionId } };
+                       Dictionary<string, object> query= new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "transactionId", transactionId } };
                         await Shell.Current.GoToAsync(nameof(TransactionDetailPage), query);
                     }
                 
@@ -237,7 +237,7 @@ namespace MonerisTest.ViewModels
                     string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                     if (errorMessage != null)
                     {
-                        await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.PermanentToken);
+                        await transactionFailureService.SaveFailedTransactionData(Purchaser.CustomerId, errorMessage, (int)TransactionType.PermanentToken);
                         await CompletePurchase(tempToken);
                     }
                     else
@@ -279,7 +279,7 @@ namespace MonerisTest.ViewModels
             );
             realm.Write(() =>
             {
-                purchaser.SavedPaymentCards.Add(paymentCard);
+                Purchaser.SavedPaymentCards.Add(paymentCard);
             });
 
 

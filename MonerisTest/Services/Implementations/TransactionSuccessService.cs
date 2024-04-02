@@ -4,9 +4,20 @@ namespace MonerisTest.Services.Implementations
 {
     public class TransactionSuccessService : ITransactionSuccessService
     {
-        public async Task<string?> SaveSuccessfulTransactionData(Receipt receipt)
+
+        private readonly IPaymentResponseHelper? paymentResponseHelper;
+
+        public TransactionSuccessService(IPaymentResponseHelper paymentResponseHelper) 
         {
-            string TransactionType = receipt.GetTransType(); 
+            this.paymentResponseHelper = paymentResponseHelper;
+        }
+
+        public async Task<string?> SaveSuccessfulTransactionData(Receipt receipt, Customer customer)
+        {
+
+            string transType = receipt.GetTransType(); 
+            string TransactionType = await paymentResponseHelper.GetTransactionType(transType) ?? string.Empty;
+
             string TransactionDate = receipt.GetTransDate();
             string TransactionTime = receipt.GetTransTime();    
             string AuthorizationNumber = receipt.GetAuthCode();
@@ -15,10 +26,10 @@ namespace MonerisTest.Services.Implementations
             string ISOCode = receipt.GetISO();
             string GoodsDescription = "Goods Description";
             string Amount = receipt.GetTransAmount();
-            string CurrencyCode = receipt.GetCurrencyCode();
-            string CardHolderName = receipt.GetCardCardHolderName();
-            string CardHolderAddress = "address";
-            string CustomerId = receipt.GetResCustId();
+            string CurrencyCode = "CAD";
+            string CardHolderName = customer.Name ?? string.Empty;
+            string CardHolderAddress = customer.Address ?? string.Empty;
+            string CustomerId = customer.CustomerId;
              
             
 
@@ -36,7 +47,7 @@ namespace MonerisTest.Services.Implementations
             currencyCode: CurrencyCode,
             cardHolderName: CardHolderName,
             cardHolderAddress: CardHolderAddress,
-            buyer: null
+            buyer: customer
          
                 );
 

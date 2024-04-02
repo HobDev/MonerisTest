@@ -1,4 +1,6 @@
-﻿namespace MonerisTest
+﻿
+
+namespace MonerisTest
 {
     public static class MauiProgram
     {
@@ -33,6 +35,8 @@
             builder.Services.AddTransient<FailedTransactionsViewModel>();
             builder.Services.AddTransient<TransactionDetailPage>();
             builder.Services.AddTransient<TransactionDetailViewModel>();
+            builder.Services.AddTransient<TransactionDetailPage>();
+            builder.Services.AddTransient<TransactionDetailViewModel>();
 
 
 
@@ -54,6 +58,7 @@
             builder.Services.AddSingleton<IReceiptErrorMessageService, ReceiptErrorMessageService>();
             builder.Services.AddSingleton<ITransactionFailureService, TransactionFailureService>();
             builder.Services.AddSingleton<ITransactionSuccessService, TransactionSuccessService>();
+            builder.Services.AddSingleton<IPaymentResponseHelper, PaymentResponseHelper>();
 
 
             return builder;

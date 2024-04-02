@@ -68,10 +68,9 @@ namespace MonerisTest.Services.Implementations
                         {
                             responseMessage = receipt.GetMessage();
                         }
-                                               
+                        return $"ISO CODE: {iSOCode} , ISO MESSAGE: {iSOMessage}\nRESPONSE CODE: {responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
                     }
-
-                    return $"ISO CODE: { iSOCode} , ISO MESSAGE: {iSOMessage}\nRESPONSE CODE: { responseCode} ---- RESPONSE MESSSAGE: {responseMessage}";
+                    
                 }
             }
 

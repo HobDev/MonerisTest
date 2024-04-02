@@ -94,31 +94,31 @@ namespace MonerisTest
                                token: SelectedCard.PermanentToken,
                                order_Id: Guid.NewGuid().ToString(),
                                amount: TotalAmount.ToString(),
-                               cust_Id: purchaser.CustomerId
+                               cust_Id: Purchaser.CustomerId
                            );
                     Receipt? receipt = await purchaseService.Purchase(purchaseData);
                     string? errorMessage = await receiptErrorMessageService?.GetErrorMessage(receipt);
                     if (errorMessage != null)
                     {
-                        await transactionFailureService.SaveFailedTransactionData(purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
+                        await transactionFailureService.SaveFailedTransactionData(Purchaser.CustomerId, errorMessage, (int)TransactionType.Purchase);
                         await Shell.Current.DisplayAlert("Purchase failed", errorMessage, "OK");
                     }
                     else
                     {
-                        string? transactionId = await transactionSuccessService.SaveSuccessfulTransactionData(receipt);
+                        string? transactionId = await transactionSuccessService.SaveSuccessfulTransactionData(receipt, Purchaser);
                         if (transactionId != null)
                         {
 
                             await Shell.Current.DisplayAlert("Payment Successful", " you will get the receipt in an email soon", "OK");
-                            Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "transactionId", transactionId } };
+                            Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "transactionId", transactionId } };
                             await Shell.Current.GoToAsync(nameof(TransactionDetailPage), query);
                         }
                     }
                 } 
                 else
                 {
-                    IDictionary<string, object> query= new Dictionary<string, object> { { "customerId", purchaser.CustomerId }, { "amount", TotalAmount.ToString()} };
-                    await Shell.Current.GoToAsync(nameof(PaymentWebPage));
+                    IDictionary<string, object> query= new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "amount", TotalAmount.ToString()} };
+                    await Shell.Current.GoToAsync(nameof(PaymentWebPage), query);
                 }
                 
             }
