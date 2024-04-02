@@ -48,11 +48,10 @@ namespace MonerisTest.Models
 
         public DateTimeOffset Transaction_DateTime { get; set; }
 
+        public string ReferenceNumber { get; set; }
 
         // only for approved transactions
         public string AuthorizationNumber { get; set; }
-
-        public string ReferenceNumber { get; set; }
 
         // code returned from the transaction   
         public string ResponseCode { get; set; }
