@@ -39,6 +39,7 @@ namespace MonerisTest.ViewModels
                 if (secondValue is string transactionId)
                 {
                     BookingInvoice = realm?.All<RecordOfSuccessfulTransaction>().FirstOrDefault(c => c.Id == transactionId);
+                    this.OnPropertyChanged(nameof(BookingInvoice));
                 }
             }
         }
