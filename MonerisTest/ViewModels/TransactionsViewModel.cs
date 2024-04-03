@@ -16,6 +16,9 @@ namespace MonerisTest.ViewModels
         [ObservableProperty]
         ObservableCollection<RecordOfSuccessfulTransaction>? bookingInvoices;
 
+        [ObservableProperty]
+        RecordOfSuccessfulTransaction? selectedTransaction;
+
         Realm? realm;
 
         public TransactionsViewModel()
@@ -40,6 +43,18 @@ namespace MonerisTest.ViewModels
                     CustomerName = Purchaser?.Name;
                     BookingInvoices=Purchaser?.RecordOfScuccessfulTransactions.ToObservableCollection();
                 }
+            }
+        }
+
+        
+
+        [RelayCommand]
+        public async Task TransactionSelected()
+        {
+            if (SelectedTransaction != null)
+            {
+                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", Purchaser.CustomerId }, { "transactionId", SelectedTransaction.Id } };
+                await Shell.Current.GoToAsync(nameof(TransactionDetailPage), query);
             }
         }
     }

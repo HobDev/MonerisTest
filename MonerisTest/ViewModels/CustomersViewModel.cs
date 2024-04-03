@@ -77,12 +77,27 @@ namespace MonerisTest.ViewModels
        
 
         [RelayCommand]
-        private async Task CustomerSelected(Customer customer)
+        private async Task InitiatePayment(Customer customer)
         {
             try
             {
                 Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", customer.CustomerId } };
                 await Shell.Current.GoToAsync($"{nameof(BookingPage)}", query);
+            }
+            catch (Exception ex)
+            {
+
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task ViewTransactions(Customer customer)
+        {
+            try
+            {
+                Dictionary<string, object> query = new Dictionary<string, object> { { "customerId", customer.CustomerId } };
+                await Shell.Current.GoToAsync($"{nameof(TransactionsPage)}", query);
             }
             catch (Exception ex)
             {
