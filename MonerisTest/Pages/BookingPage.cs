@@ -43,7 +43,7 @@ public class BookingPage : ContentPage
                            
                         }),
                       
-                    }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.PaymentCards)),
+                    }.Bind(ItemsView.ItemsSourceProperty, nameof(viewModel.PaymentCards)).Bind(SelectableItemsView.SelectedItemProperty, nameof(viewModel.SelectedCard)),
                 new Label{FontSize=20,TextColor=Colors.Black, FontAttributes=FontAttributes.Bold, HorizontalOptions=LayoutOptions.Center}.Bind(Label.TextProperty, nameof(viewModel.TotalAmount), stringFormat:"Amount Payable ${0}"),
                 new Button{Text="PurChase", Command= viewModel.PurchaseCommand}.Bind(Button.TextProperty,nameof(viewModel.TotalAmount), stringFormat: "${0} - Pay Now"),
 
