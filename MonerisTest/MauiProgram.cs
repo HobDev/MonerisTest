@@ -27,8 +27,8 @@ namespace MonerisTest
             builder.Services.AddTransient<BookingViewModel>();
             builder.Services.AddTransient<PaymentWebPage>();
             builder.Services.AddTransient<PaymentWebViewModel>();
-            builder.Services.AddTransient<ReceiptsPage>();
-            builder.Services.AddTransient<ReceiptsViewModel>();
+            builder.Services.AddTransient<TransactionsPage>();
+            builder.Services.AddTransient<TransactionsViewModel>();
             builder.Services.AddTransient<CancellationPage>();
             builder.Services.AddTransient<CancellationViewModel>();
             builder.Services.AddTransient<FailedTransactionsPage>();

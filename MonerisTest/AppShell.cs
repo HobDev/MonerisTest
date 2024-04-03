@@ -12,7 +12,7 @@ namespace MonerisTest
             Routing.RegisterRoute(nameof(CancellationPage), typeof(CancellationPage));
             Routing.RegisterRoute(nameof(CustomersPage), typeof(CustomersPage));
             Routing.RegisterRoute(nameof(PaymentWebPage), typeof(PaymentWebPage));
-            Routing.RegisterRoute(nameof(ReceiptsPage), typeof(ReceiptsPage));
+            Routing.RegisterRoute(nameof(TransactionsPage), typeof(TransactionsPage));
             Routing.RegisterRoute(nameof(FailedTransactionsPage), typeof(FailedTransactionsPage));
             Routing.RegisterRoute(nameof(TransactionDetailPage), typeof(TransactionDetailPage));
 
